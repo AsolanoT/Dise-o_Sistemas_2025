@@ -1,0 +1,25 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+LAYOUT_TOP_DOWN()
+
+' Personas
+Person(contribuyente, "Contribuyente", "Persona natural o jurídica que gestiona sus obligaciones tributarias")
+Person(superadmin, "SuperAdmin", "Funcionario de la Alcaldía de Neiva")
+Person(entidad, "Entidad Pública", "Consultores del sistema para reportes")
+
+' Sistema principal
+System_Boundary(erp, "ERP Tributario") {
+  Container(web, "Frontend Web", "Ionic + React", "Interfaz web responsiva")
+  Container(api, "Backend API", "Spring Boot", "Servicios REST que procesan lógica de negocio")
+  ContainerDb(db, "Base de Datos", "MySQL", "Almacena contribuyentes, obligaciones y facturación")
+}
+
+' Relaciones entre actores y sistema
+Rel(contribuyente, web, "Usa")
+Rel(web, api, "Llamadas HTTP (fetch/axios)")
+Rel(api, db, "JDBC / JPA")
+
+Rel(superadmin, api, "Usa")
+Rel(entidad, api, "Usa")
+
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+LAYOUT_TOP_DOWN()
+
+' Personas
+Person(Contribuyente, "Contribuyente", "Persona natural o jurídica que gestiona sus obligaciones tributarias.")
+Person(SuperAdmin, "SuperAdmin", "Funcionario de la Alcaldía de Neiva")
+Person(EntidadPublica, "Entidad Pública", "Consultores del sistema para reportes")
+
+' Sistema
+System(ERP, "ERP Tributario", "Sistema web para la gestión de obligaciones y facturación tributaria")
+
+' Relaciones
+Rel(Contribuyente, ERP, "Actualiza datos, consulta obligaciones y paga facturas")
+Rel(SuperAdmin, ERP, "Gestiona contribuyentes y genera reportes")
+Rel(EntidadPublica, ERP, "Consulta pagos y estados tributarios")
+
+@enduml
