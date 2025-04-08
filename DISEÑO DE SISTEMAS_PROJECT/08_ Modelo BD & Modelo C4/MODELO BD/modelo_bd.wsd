@@ -1,11 +1,9 @@
 @startuml
-' Estilo para destacar claves
 hide circle
 skinparam classAttributeIconSize 0
 
-title Modelo de Base de Datos - ERP TRIBUTARIO NEIVA
+title Modelo de Base de Datos - ERP TRIBUTARIO NEIVA (tabla factura actualizada)
 
-' Tablas principales
 class usuario {
   +PK id_usuario : int
   nombre : varchar
@@ -45,8 +43,8 @@ class tipo_tributo {
   periodicidad : varchar <<Ej: 'Mensual', 'Trimestral', 'Anual'>>
 }
 
-class obligacion_tributaria {
-  +PK id_obligacion : int
+class factura {
+  +PK id_factura : int
   FK id_contribuyente : int
   FK id_tipo_tributo : int
   periodo : varchar <<Ej: '2024-01', '2024-T1'>>
@@ -54,17 +52,8 @@ class obligacion_tributaria {
   estado : varchar <<Ej: 'Pendiente', 'Pagado', 'Vencido'>>
 }
 
-class factura {
-  +PK id_factura : int
-  FK id_contribuyente : int
-  fecha_emision : date
-  total : decimal
-  estado : varchar <<Ej: 'Emitida', 'Pagada', 'Anulada'>>
-}
-
 class detalle_factura {
   +PK id_detalle : int
-  FK id_factura : int
   FK id_tipo_tributo : int
   concepto : varchar <<Ej: 'Pago Predial 2024', 'ICA T1'>>
   periodo : varchar
@@ -91,11 +80,8 @@ class auditoria {
   descripcion : text
 }
 
-' Relaciones (con cardinalidades anotadas)
 usuario --> rol : id_rol\n[1..1]
 contribuyente --> tipo_contribuyente : id_tipo_contribuyente\n[1..1]
-obligacion_tributaria --> contribuyente : id_contribuyente\n[1..1]
-obligacion_tributaria --> tipo_tributo : id_tipo_tributo\n[1..1]
 factura --> contribuyente : id_contribuyente\n[1..1]
 detalle_factura --> factura : id_factura\n[1..1]
 detalle_factura --> tipo_tributo : id_tipo_tributo\n[1..1]
