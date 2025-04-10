@@ -1,6 +1,6 @@
 @startuml
 !includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
-LAYOUT_TOP_DOWN()
+LAYOUT_LEFT_RIGHT()
 
 ' Personas
 Person(Contribuyente, "Contribuyente", "Persona natural o jurídica que gestiona sus obligaciones tributarias.")
@@ -10,7 +10,7 @@ Person(EntidadPublica, "Entidad Pública", "Consultores del sistema para reporte
 ' Sistema
 System(ERP, "ERP Tributario", "Sistema web para la gestión de obligaciones y facturación tributaria")
 
-' Relaciones
+' Relaciones personalizadas
 Rel(Contribuyente, ERP, "Actualiza datos, consulta obligaciones y paga facturas")
 Rel(SuperAdmin, ERP, "Gestiona contribuyentes y genera reportes")
 Rel(EntidadPublica, ERP, "Consulta pagos y estados tributarios")
