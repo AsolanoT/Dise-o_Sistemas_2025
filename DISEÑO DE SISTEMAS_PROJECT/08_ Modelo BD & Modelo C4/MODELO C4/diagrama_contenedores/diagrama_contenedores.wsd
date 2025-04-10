@@ -9,7 +9,7 @@ Person(entidad, "Entidad Pública", "Consultores del sistema para reportes")
 
 ' Sistema principal
 System_Boundary(erp, "ERP Tributario") {
-  Container(web, "Frontend Web", "Ionic + React", "Interfaz web responsiva")
+  Container(web, "Web Application", "Ionic + React", "Interfaz web responsiva")
   Container(api, "Backend API", "Spring Boot", "Servicios REST que procesan lógica de negocio")
   ContainerDb(db, "Base de Datos", "MySQL", "Almacena contribuyentes, obligaciones y facturación")
 }
@@ -19,7 +19,7 @@ Rel(contribuyente, web, "Usa")
 Rel(web, api, "Llamadas HTTP (fetch/axios)")
 Rel(api, db, "JDBC / JPA")
 
-Rel(superadmin, api, "Usa")
-Rel(entidad, api, "Usa")
+Rel(superadmin, web, "Usa")
+Rel(entidad, web, "Usa")
 
 @enduml

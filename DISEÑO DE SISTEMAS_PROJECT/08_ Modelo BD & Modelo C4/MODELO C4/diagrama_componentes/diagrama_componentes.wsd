@@ -2,12 +2,18 @@
 !includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
 LAYOUT_TOP_DOWN()
 
-Container(api, "Backend API", "Spring Boot", "API REST del ERP Tributario") 
 
+Container(api, "Web Application", "Spring Boot", "API REST del ERP Tributario") 
+
+System_Boundary(erp, "ERP Tributario") {
 Component(controladores, "Controladores REST", "Spring Web", "Reciben las solicitudes desde el frontend")
 Component(servicios, "Servicios de Negocio", "Java Service Layer", "Lógica de negocio tributario")
-Component(repositorios, "Repositorios JPA", "Spring Data", "Acceso a la base de datos")
 Component(autenticacion, "Módulo de Autenticación", "JWT + SHA-256", "Manejo de usuarios, roles y sesiones seguras")
+
+}
+
+Component(repositorios, "Repositorios JPA", "Spring Data", "Acceso a la base de datos")
+
 
 Rel(api, controladores, "")
 Rel(controladores, servicios, "")
