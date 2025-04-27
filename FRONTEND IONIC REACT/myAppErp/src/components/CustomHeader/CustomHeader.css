@@ -1,0 +1,42 @@
+.custom-header ion-toolbar {
+    --background: #666666;
+    --color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+  }
+  
+  .custom-header ion-toolbar ion-buttons {
+    min-width: 50px;
+  }
+  
+  .custom-header ion-toolbar ion-buttons ion-icon {
+    font-size: 30px;
+  }
+  
+  .custom-header .header-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    height: 10%;
+    max-width: 60%;
+  }
+  
+  .custom-header .header-center .header-icon {
+    font-size: 30px;
+    margin-right: 8px;
+    color: white;
+  }
+  
+  .custom-header .header-center ion-title {
+    padding: 0;
+    font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
