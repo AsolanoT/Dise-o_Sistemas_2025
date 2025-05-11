@@ -25,6 +25,8 @@ interface Contribuyente {
   telefono: string;
   correo: string;
   id_tipo_contribuyente: number;
+  tipo_actividad : string;
+  porcentaje_iva : number;
 }
 
 interface TipoContribuyente {
@@ -51,6 +53,8 @@ const ContribuyenteRegistration: React.FC = () => {
     telefono: "",
     correo: "",
     id_tipo_contribuyente: 1,
+    tipo_actividad : "",
+    porcentaje_iva : 1,
   });
 
   useEffect(() => {
@@ -74,6 +78,8 @@ const ContribuyenteRegistration: React.FC = () => {
             telefono: "3001234567",
             correo: "juan@example.com",
             id_tipo_contribuyente: 1,
+            tipo_actividad : "",
+            porcentaje_iva : 1,
           };
           setForm(mockContribuyente);
         }
@@ -129,6 +135,18 @@ const ContribuyenteRegistration: React.FC = () => {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+
+    // Tipo de actividad
+    if (!form.tipo_actividad || !form.tipo_actividad|| !form.tipo_actividad) {
+      setError("Por favor complete todos los campos requeridos");
+      return;
+    }
+
+    // Porcentaje IVA
+    if (!form.porcentaje_iva || !form.porcentaje_iva|| !form.porcentaje_iva) {
+      setError("Por favor complete todos los campos requeridos");
+      return;
     }
   };
 
@@ -272,6 +290,41 @@ const ContribuyenteRegistration: React.FC = () => {
                   </IonSelectOption>
                 ))}
               </IonSelect>
+            </div>
+
+
+            {/* Tipo de actividad */}
+            <div className="form-field-group">
+              <IonLabel className="field-label">Tipo de actividad*</IonLabel>
+              <IonInput
+                type="text"
+                value={form.tipo_actividad}
+                onIonChange={(e) =>
+                  handleInputChange("tipo_actividad", e.detail.value!)
+                }
+                required
+                disabled={loading}
+                className="custom-input"
+                placeholder="Ingrese el Tipo de Actividad"
+              />
+            </div>
+
+
+
+            {/* Iva */}
+            <div className="form-field-group">
+              <IonLabel className="field-label">IVA*</IonLabel>
+              <IonInput
+                type="text"
+                value={form.porcentaje_iva}
+                onIonChange={(e) =>
+                  handleInputChange("porcentaje_iva", e.detail.value!)
+                }
+                required
+                disabled={loading}
+                className="custom-input"
+                placeholder="Ingrese el porcentaje del IVA"
+              />
             </div>
           </IonList>
 

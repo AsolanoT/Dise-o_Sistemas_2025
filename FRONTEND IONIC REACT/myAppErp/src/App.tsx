@@ -28,6 +28,7 @@ import Login from "./pages/Login/Login";
 import ContribuyenteRegistration from "./pages/Registration/Contribuyente/ContribuyenteRegistration";
 import InvoiceGenerator from "./pages/Invoicing/InvoiceGenerator";
 import TipoTributoPage from "./pages/TributeType/TipoTributoPage";
+import UserForm from "./pages/Registration/User/UserForm";
 
 setupIonicReact();
 
@@ -42,6 +43,8 @@ const App: React.FC = () => (
         />
         <Route exact path="/factura" component={InvoiceGenerator} />
         <Route exact path="/tipo-tributo" component={TipoTributoPage} />
+        <Route exact path="/usuario" component={UserForm} />
+
 
         <Route exact path="/login" component={Login} />
         <Route exact path="/">
