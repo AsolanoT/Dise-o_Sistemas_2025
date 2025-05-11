@@ -18,13 +18,6 @@ import "@ionic/react/css/text-transformation.css";
 import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
 /* import '@ionic/react/css/palettes/dark.always.css'; */
 /* import '@ionic/react/css/palettes/dark.class.css'; */
 import "@ionic/react/css/palettes/dark.system.css";
@@ -32,6 +25,9 @@ import "@ionic/react/css/palettes/dark.system.css";
 /* Theme variables */
 import "./theme/variables.css";
 import Login from "./pages/Login/Login";
+import ContribuyenteRegistration from "./pages/Registration/Contribuyente/ContribuyenteRegistration";
+import InvoiceGenerator from "./pages/Invoicing/InvoiceGenerator";
+import TipoTributoPage from "./pages/TributeType/TipoTributoPage";
 
 setupIonicReact();
 
@@ -39,6 +35,14 @@ const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
+        <Route
+          exact
+          path="/contribuyente"
+          component={ContribuyenteRegistration}
+        />
+        <Route exact path="/factura" component={InvoiceGenerator} />
+        <Route exact path="/tipo-tributo" component={TipoTributoPage} />
+
         <Route exact path="/login" component={Login} />
         <Route exact path="/">
           <Redirect to="/login" />
