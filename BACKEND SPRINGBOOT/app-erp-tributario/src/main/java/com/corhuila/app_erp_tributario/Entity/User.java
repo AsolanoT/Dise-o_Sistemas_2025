@@ -32,10 +32,10 @@ public class User {
     private String phone;
 
     @Column(nullable = false)
-    private String password;
+    private String rol;
 
     @Column(nullable = false)
-    private String rol;
+    private String password;
 
     @Column(nullable = false)
     private boolean verified = false;
