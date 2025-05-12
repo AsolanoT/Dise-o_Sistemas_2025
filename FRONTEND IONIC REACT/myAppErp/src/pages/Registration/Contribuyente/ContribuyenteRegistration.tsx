@@ -25,8 +25,8 @@ interface Contribuyente {
   telefono: string;
   correo: string;
   id_tipo_contribuyente: number;
-  tipo_actividad : string;
-  porcentaje_iva : number;
+  tipo_actividad: string;
+  porcentaje_iva: number;
 }
 
 interface TipoContribuyente {
@@ -53,8 +53,8 @@ const ContribuyenteRegistration: React.FC = () => {
     telefono: "",
     correo: "",
     id_tipo_contribuyente: 1,
-    tipo_actividad : "",
-    porcentaje_iva : 1,
+    tipo_actividad: "",
+    porcentaje_iva: 1,
   });
 
   useEffect(() => {
@@ -78,8 +78,8 @@ const ContribuyenteRegistration: React.FC = () => {
             telefono: "3001234567",
             correo: "juan@example.com",
             id_tipo_contribuyente: 1,
-            tipo_actividad : "",
-            porcentaje_iva : 1,
+            tipo_actividad: "",
+            porcentaje_iva: 1,
           };
           setForm(mockContribuyente);
         }
@@ -138,13 +138,13 @@ const ContribuyenteRegistration: React.FC = () => {
     }
 
     // Tipo de actividad
-    if (!form.tipo_actividad || !form.tipo_actividad|| !form.tipo_actividad) {
+    if (!form.tipo_actividad || !form.tipo_actividad || !form.tipo_actividad) {
       setError("Por favor complete todos los campos requeridos");
       return;
     }
 
     // Porcentaje IVA
-    if (!form.porcentaje_iva || !form.porcentaje_iva|| !form.porcentaje_iva) {
+    if (!form.porcentaje_iva || !form.porcentaje_iva || !form.porcentaje_iva) {
       setError("Por favor complete todos los campos requeridos");
       return;
     }
@@ -292,7 +292,6 @@ const ContribuyenteRegistration: React.FC = () => {
               </IonSelect>
             </div>
 
-
             {/* Tipo de actividad */}
             <div className="form-field-group">
               <IonLabel className="field-label">Tipo de actividad*</IonLabel>
@@ -308,8 +307,6 @@ const ContribuyenteRegistration: React.FC = () => {
                 placeholder="Ingrese el Tipo de Actividad"
               />
             </div>
-
-
 
             {/* Iva */}
             <div className="form-field-group">
