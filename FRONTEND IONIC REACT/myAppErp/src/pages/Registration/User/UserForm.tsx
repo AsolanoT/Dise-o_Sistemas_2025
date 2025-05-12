@@ -15,22 +15,22 @@ import {
   IonList,
   IonItem,
   IonToggle,
+  IonDatetime,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import "./UserForm.css";
 
 interface Usuario {
   id_usuario?: number;
-  nombre: string;
-  correo: string;
-  contrasena: string;
+  documentType: string;
+  documentNumber: string;
+  fullName: string;
+  birthDate: string;
+  email: string;
+  phone: string;
+  password: string;
+  rol: string;
   estado: boolean;
-  id_rol: number;
-}
-
-interface Rol {
-  id_rol: number;
-  nombre: string;
 }
 
 const UserForm: React.FC = () => {
@@ -39,40 +39,34 @@ const UserForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [roles, setRoles] = useState<Rol[]>([]);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const [form, setForm] = useState<Usuario>({
-    nombre: "",
-    correo: "",
-    contrasena: "",
+    documentType: "cc",
+    documentNumber: "",
+    fullName: "",
+    birthDate: "",
+    email: "",
+    phone: "",
+    password: "",
+    rol: "",
     estado: true,
-    id_rol: 0,
   });
 
-  // Simulación de datos - reemplazar con llamadas API reales
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
+  const documentTypes = [
+    { value: "cc", label: "Cédula de Ciudadanía" },
+    { value: "ti", label: "Tarjeta de Identidad" },
+    { value: "ce", label: "Cédula de Extranjería" },
+    { value: "passport", label: "Pasaporte" },
+    { value: "nit", label: "NIT" },
+  ];
 
-        // Simular carga de roles
-        const mockRoles: Rol[] = [
-          { id_rol: 1, nombre: "Super Admin" },
-          { id_rol: 2, nombre: "Contribuyente " },
-          { id_rol: 3, nombre: "Entidad Publica" },
-        ];
-        setRoles(mockRoles);
-
-      } catch (err) {
-        setError("Error al cargar datos iniciales");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const roles = [
+    { value: "admin", label: "Administrador" },
+    { value: "user", label: "Usuario Regular" },
+    { value: "public_entity", label: "Entidad Pública" },
+    { value: "contributor", label: "Contribuyente" },
+  ];
 
   const handleInputChange = (field: keyof Usuario, value: any) => {
     setForm((prev) => ({
@@ -89,22 +83,37 @@ const UserForm: React.FC = () => {
       setError(null);
 
       // Validaciones
-      if (!form.nombre.trim()) {
-        setError("Debe ingresar un nombre");
+      if (!form.fullName.trim()) {
+        setError("Debe ingresar el nombre completo");
         return;
       }
 
-      if (!form.correo.trim() || !form.correo.includes("@")) {
+      if (!form.documentNumber.trim()) {
+        setError("Debe ingresar el número de documento");
+        return;
+      }
+
+      if (!form.birthDate) {
+        setError("Debe seleccionar la fecha de nacimiento");
+        return;
+      }
+
+      if (!form.email.trim() || !form.email.includes("@")) {
         setError("Debe ingresar un correo electrónico válido");
         return;
       }
 
-      if (!form.contrasena || form.contrasena.length < 6) {
+      if (!form.phone.trim()) {
+        setError("Debe ingresar un número de teléfono");
+        return;
+      }
+
+      if (!form.password || form.password.length < 6) {
         setError("La contraseña debe tener al menos 6 caracteres");
         return;
       }
 
-      if (!form.id_rol) {
+      if (!form.rol) {
         setError("Debe seleccionar un rol");
         return;
       }
@@ -128,25 +137,74 @@ const UserForm: React.FC = () => {
     history.goBack();
   };
 
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "Seleccione fecha de nacimiento";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("es-ES", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>{form.id_usuario ? "Editar Usuario" : "Nuevo Usuario"}</IonTitle>
+          <IonTitle>
+            {form.id_usuario ? "Editar Usuario" : "Nuevo Usuario"}
+          </IonTitle>
         </IonToolbar>
       </IonHeader>
 
       <IonContent className="ion-padding">
         {error && <div className="error-message">{error}</div>}
 
-        <form onSubmit={handleSubmit} className="invoice-form">
+        <form onSubmit={handleSubmit} className="user-form">
           <IonList>
-            {/* Nombre */}
+            {/* Tipo de Documento */}
             <div className="form-field-group">
-              <IonLabel className="field-label">Nombre*</IonLabel>
+              <IonLabel className="field-label">Tipo de Documento*</IonLabel>
+              <IonSelect
+                value={form.documentType}
+                onIonChange={(e) =>
+                  handleInputChange("documentType", e.detail.value)
+                }
+                disabled={loading}
+                className="custom-select"
+                interface="popover"
+              >
+                {documentTypes.map((type) => (
+                  <IonSelectOption key={type.value} value={type.value}>
+                    {type.label}
+                  </IonSelectOption>
+                ))}
+              </IonSelect>
+            </div>
+
+            {/* Número de Documento */}
+            <div className="form-field-group">
+              <IonLabel className="field-label">Número de Documento*</IonLabel>
               <IonInput
-                value={form.nombre}
-                onIonChange={(e) => handleInputChange("nombre", e.detail.value!)}
+                value={form.documentNumber}
+                onIonChange={(e) =>
+                  handleInputChange("documentNumber", e.detail.value!)
+                }
+                required
+                disabled={loading}
+                className="custom-input"
+                placeholder="Ingrese el número de documento"
+              />
+            </div>
+
+            {/* Nombre Completo */}
+            <div className="form-field-group">
+              <IonLabel className="field-label">Nombre Completo*</IonLabel>
+              <IonInput
+                value={form.fullName}
+                onIonChange={(e) =>
+                  handleInputChange("fullName", e.detail.value!)
+                }
                 required
                 disabled={loading}
                 className="custom-input"
@@ -154,17 +212,76 @@ const UserForm: React.FC = () => {
               />
             </div>
 
-            {/* Correo */}
+            {/* Fecha de Nacimiento */}
+            <div className="form-field-group">
+              <IonLabel className="field-label">Fecha de Nacimiento*</IonLabel>
+              <IonItem
+                button
+                onClick={() => setShowDatePicker(true)}
+                className="custom-input"
+                lines="none"
+              >
+                <IonLabel>{formatDate(form.birthDate)}</IonLabel>
+              </IonItem>
+              {showDatePicker && (
+                <div className="datetime-modal-backdrop">
+                  <div className="datetime-modal-content">
+                    <IonDatetime
+                      presentation="date"
+                      onIonChange={(e) => {
+                        handleInputChange(
+                          "birthDate",
+                          e.detail.value as string
+                        );
+                        setShowDatePicker(false);
+                      }}
+                      max={new Date().toISOString()}
+                      locale="es-ES"
+                    />
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        marginTop: 8,
+                      }}
+                    >
+                      <IonButton
+                        size="small"
+                        onClick={() => setShowDatePicker(false)}
+                      >
+                        Cancelar
+                      </IonButton>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Email */}
             <div className="form-field-group">
               <IonLabel className="field-label">Correo Electrónico*</IonLabel>
               <IonInput
                 type="email"
-                value={form.correo}
-                onIonChange={(e) => handleInputChange("correo", e.detail.value!)}
+                value={form.email}
+                onIonChange={(e) => handleInputChange("email", e.detail.value!)}
                 required
                 disabled={loading}
                 className="custom-input"
                 placeholder="Ingrese el correo electrónico"
+              />
+            </div>
+
+            {/* Teléfono */}
+            <div className="form-field-group">
+              <IonLabel className="field-label">Teléfono*</IonLabel>
+              <IonInput
+                type="tel"
+                value={form.phone}
+                onIonChange={(e) => handleInputChange("phone", e.detail.value!)}
+                required
+                disabled={loading}
+                className="custom-input"
+                placeholder="Ingrese el número de teléfono"
               />
             </div>
 
@@ -173,13 +290,36 @@ const UserForm: React.FC = () => {
               <IonLabel className="field-label">Contraseña*</IonLabel>
               <IonInput
                 type="password"
-                value={form.contrasena}
-                onIonChange={(e) => handleInputChange("contrasena", e.detail.value!)}
+                value={form.password}
+                onIonChange={(e) =>
+                  handleInputChange("password", e.detail.value!)
+                }
                 required
                 disabled={loading}
                 className="custom-input"
                 placeholder="Ingrese la contraseña"
               />
+            </div>
+
+            {/* Rol */}
+            <div className="form-field-group">
+              <IonLabel className="field-label">Rol*</IonLabel>
+              <IonSelect
+                value={form.rol}
+                onIonChange={(e) => handleInputChange("rol", e.detail.value)}
+                disabled={loading}
+                className="custom-select"
+                interface="popover"
+              >
+                <IonSelectOption value="" disabled>
+                  Seleccione un rol
+                </IonSelectOption>
+                {roles.map((role) => (
+                  <IonSelectOption key={role.value} value={role.value}>
+                    {role.label}
+                  </IonSelectOption>
+                ))}
+              </IonSelect>
             </div>
 
             {/* Estado */}
@@ -188,35 +328,13 @@ const UserForm: React.FC = () => {
               <IonItem lines="none">
                 <IonToggle
                   checked={form.estado}
-                  onIonChange={(e) => handleInputChange("estado", e.detail.checked)}
+                  onIonChange={(e) =>
+                    handleInputChange("estado", e.detail.checked)
+                  }
                   disabled={loading}
                 />
                 <IonLabel>{form.estado ? "Activo" : "Inactivo"}</IonLabel>
               </IonItem>
-            </div>
-
-            {/* Rol */}
-            <div className="form-field-group">
-              <IonLabel className="field-label">Rol*</IonLabel>
-              <IonSelect
-                value={form.id_rol}
-                onIonChange={(e) => handleInputChange("id_rol", e.detail.value)}
-                disabled={loading}
-                className="custom-select"
-                interface="popover"
-              >
-                <IonSelectOption value={0} disabled>
-                  Seleccione un rol
-                </IonSelectOption>
-                {roles.map((rol) => (
-                  <IonSelectOption
-                    key={rol.id_rol}
-                    value={rol.id_rol}
-                  >
-                    {rol.nombre}
-                  </IonSelectOption>
-                ))}
-              </IonSelect>
             </div>
           </IonList>
 

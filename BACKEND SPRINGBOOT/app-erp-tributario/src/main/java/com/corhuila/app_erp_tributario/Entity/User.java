@@ -35,5 +35,8 @@ public class User {
     private String password;
 
     @Column(nullable = false)
+    private String rol;
+
+    @Column(nullable = false)
     private boolean verified = false;
 }
