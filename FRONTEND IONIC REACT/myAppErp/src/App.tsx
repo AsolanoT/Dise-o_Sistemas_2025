@@ -1,6 +1,8 @@
+import { Redirect, Route } from "react-router-dom";
 import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { Redirect, Route } from "react-router-dom";
+import AuthLayout from "./components/layouts/AuthLayout";
+import MainLayout from "./components/layouts/MainLayout";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -18,22 +20,17 @@ import "@ionic/react/css/text-transformation.css";
 import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
 
-/* Dark mode */
+/* import '@ionic/react/css/palettes/dark.always.css'; */
+/* import '@ionic/react/css/palettes/dark.class.css'; */
 import "@ionic/react/css/palettes/dark.system.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-
-/* Pages */
 import Login from "./pages/Login/Login";
 import ContribuyenteRegistration from "./pages/Registration/Contribuyente/ContribuyenteRegistration";
 import InvoiceGenerator from "./pages/Invoicing/InvoiceGenerator";
 import TipoTributoPage from "./pages/TributeType/TipoTributoPage";
 import UserForm from "./pages/Registration/User/UserForm";
-
-/* Layouts */
-import AuthLayout from "./components/layouts/AuthLayout";
-import MainLayout from "./components/layouts/MainLayout";
 
 setupIonicReact();
 
@@ -48,6 +45,8 @@ const App: React.FC = () => (
           </AuthLayout>
         </Route>
 
+        <Redirect exact from="/" to="/login" />
+
         {/* Rutas privadas (con menú) */}
         <Route exact path="/contribuyente">
           <MainLayout pageName="Registro de Contribuyente">
@@ -56,13 +55,13 @@ const App: React.FC = () => (
         </Route>
 
         <Route exact path="/factura">
-          <MainLayout pageName="Generador de Facturas">
+          <MainLayout pageName="Generador de Factura">
             <InvoiceGenerator />
           </MainLayout>
         </Route>
 
         <Route exact path="/tipo-tributo">
-          <MainLayout pageName="Tipos de Tributo">
+          <MainLayout pageName="Tipo de Tributo">
             <TipoTributoPage />
           </MainLayout>
         </Route>
@@ -72,8 +71,6 @@ const App: React.FC = () => (
             <UserForm />
           </MainLayout>
         </Route>
-
-        <Redirect exact from="/" to="/login" />
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>

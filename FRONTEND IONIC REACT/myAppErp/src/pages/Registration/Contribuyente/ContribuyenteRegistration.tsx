@@ -16,6 +16,7 @@ import {
 } from "@ionic/react";
 import { useHistory, useParams } from "react-router-dom";
 import "./ContribuyenteRegistration.css";
+import CustomHeader from "../../../components/CustomHeader/CustomHeader";
 
 interface Contribuyente {
   tipo_documento: string;
@@ -156,6 +157,12 @@ const ContribuyenteRegistration: React.FC = () => {
 
   return (
     <IonPage>
+      <CustomHeader
+        pageName="Generar Factura"
+        showMenuButton={true}
+        showLogoutButton={true}
+      />
+      {/* Header 
       <IonHeader>
         <IonToolbar>
           <IonTitle>
@@ -163,6 +170,7 @@ const ContribuyenteRegistration: React.FC = () => {
           </IonTitle>
         </IonToolbar>
       </IonHeader>
+      */}
 
       <IonContent className="ion-padding">
         {error && <div className="error-message">{error}</div>}

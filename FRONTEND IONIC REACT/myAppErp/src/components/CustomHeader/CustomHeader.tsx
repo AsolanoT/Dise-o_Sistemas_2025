@@ -1,52 +1,57 @@
 import {
   IonHeader,
   IonToolbar,
+  IonTitle,
   IonButtons,
   IonButton,
   IonIcon,
+  IonMenuButton,
 } from "@ionic/react";
-import { menuOutline, logOutOutline } from "ionicons/icons";
+import { logOutOutline, cashOutline } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import "./CustomHeader.css";
 
 interface CustomHeaderProps {
-  showMenuButton: boolean;
-  showLogoutButton: boolean;
-  hideTitle?: boolean; // Nueva prop para ocultar el título
+  pageName: string;
+  showMenuButton?: boolean;
+  showLogoutButton?: boolean;
 }
 
 const CustomHeader: React.FC<CustomHeaderProps> = ({
-  showMenuButton,
-  showLogoutButton,
-  hideTitle = false, // Valor por defecto
+  pageName,
+  showMenuButton = true,
+  showLogoutButton = true,
 }) => {
   const history = useHistory();
 
   const handleLogout = () => {
-    history.push("/login");
+    history.push("/welcome");
   };
 
   return (
     <IonHeader className="custom-header">
-      <IonToolbar className="custom-toolbar">
+      <IonToolbar>
         {showMenuButton && (
           <IonButtons slot="start">
-            <IonButton className="menu-button">
-              <IonIcon icon={menuOutline} className="menu-icon" />
-            </IonButton>
+            <IonMenuButton />
           </IonButtons>
         )}
 
-        {/* Eliminamos IonTitle si hideTitle es true */}
-        {!hideTitle && (
-          <div className="header-title-space"></div> // Espacio reservado
-        )}
+        <div className="header-center">
+          <IonIcon icon={cashOutline} className="header-icon" />
+          <IonTitle>{pageName}</IonTitle>
+        </div>
 
         {showLogoutButton && (
           <IonButtons slot="end">
-            <IonButton className="logout-button" onClick={handleLogout}>
-              <IonIcon icon={logOutOutline} className="logout-icon" />
+            <IonButton onClick={handleLogout}>
+              <IonIcon icon={logOutOutline} />
             </IonButton>
+            {/*}
+            <IonButton>
+              <IonIcon icon={personCircleOutline} />
+            </IonButton>
+            */}
           </IonButtons>
         )}
       </IonToolbar>

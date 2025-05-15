@@ -1,23 +1,20 @@
-import { IonContent, IonPage } from "@ionic/react";
-import "./Layouts.css";
+import { IonPage, IonContent } from "@ionic/react";
+import CustomHeader from "../CustomHeader/CustomHeader";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
-  showHeader?: boolean; // Nueva prop para controlar visibilidad
+  pageName: string;
 }
 
-const AuthLayout: React.FC<AuthLayoutProps> = ({ 
-  children, 
-  showHeader = false // Por defecto no mostrar header
-}) => {
+const AuthLayout: React.FC<AuthLayoutProps> = ({ children, pageName }) => {
   return (
     <IonPage>
-      {/* Eliminamos completamente el CustomHeader para el login */}
-      <IonContent className={`auth-content ${!showHeader ? 'no-header' : ''}`}>
-        <div className="auth-container">
-          {children}
-        </div>
-      </IonContent>
+      <CustomHeader
+        pageName={pageName}
+        showMenuButton={false}
+        showLogoutButton={false}
+      />
+      <IonContent>{children}</IonContent>
     </IonPage>
   );
 };
