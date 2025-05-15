@@ -1,7 +1,6 @@
 package com.corhuila.app_erp_tributario.Entity;
 
 import java.time.LocalDate;
-
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -32,11 +31,16 @@ public class User {
     private String phone;
 
     @Column(nullable = false)
-    private String rol;
-
-    @Column(nullable = false)
     private String password;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_rol", referencedColumnName = "id")
+    private Role role;
 
     @Column(nullable = false)
     private boolean verified = false;
+
+    @Column(nullable = false)
+    private boolean estado = true;
+
 }

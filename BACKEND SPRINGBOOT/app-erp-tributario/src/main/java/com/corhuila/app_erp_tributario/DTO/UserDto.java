@@ -2,6 +2,7 @@ package com.corhuila.app_erp_tributario.DTO;
 
 import java.time.LocalDate;
 
+import com.corhuila.app_erp_tributario.Entity.Role;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 // UserDto.java
@@ -38,5 +39,8 @@ public class UserDto {
     @NotBlank
     @Size(min = 8)
     private String password;
+
+    @NotNull(message = "El rol es requerido")
+    private Role role;
 
 }

@@ -1,8 +1,6 @@
 package com.corhuila.app_erp_tributario.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "contribuyente")
@@ -26,8 +24,9 @@ public class Contribuyente extends ABaseEntity {
     @Column(name = "email", nullable = false, length = 100, unique = true)
     private String email;
 
-    @Column(name = "tipo_contribuyente", nullable = false, length = 100)
-    private String tipo_contribuyente;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_tipo_contribuyente", referencedColumnName = "id")
+    private TipoContribuyente tipo_contribuyente;
 
     @Column(name = "tipo_actividad", nullable = false, length = 100)
     private String tipo_actividad;
@@ -83,11 +82,11 @@ public class Contribuyente extends ABaseEntity {
         this.email = email;
     }
 
-    public String getTipo_contribuyente() {
+    public TipoContribuyente getTipo_contribuyente() {
         return tipo_contribuyente;
     }
 
-    public void setTipo_contribuyente(String tipo_contribuyente) {
+    public void setTipo_contribuyente(TipoContribuyente tipo_contribuyente) {
         this.tipo_contribuyente = tipo_contribuyente;
     }
 

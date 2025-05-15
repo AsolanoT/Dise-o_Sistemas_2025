@@ -13,6 +13,7 @@
   align-items: center;
   width: 100%;
   height: 100%;
+  padding: 20px;
 }
 
 .neumorphic-card {
@@ -24,7 +25,8 @@
   justify-content: center;
   align-items: center;
   padding: 30px;
-  width: 300px;
+  width: 100%;
+  max-width: 400px;
   text-align: center;
   margin: auto;
 }
@@ -87,49 +89,75 @@
 
 /* Estilos para mensajes de error */
 .error-message {
-color: #ff4444;
-font-size: 0.8rem;
-margin: -15px 0 10px 0;
-text-align: center;
-width: 100%;
+  color: #ff4444;
+  font-size: 0.8rem;
+  margin: -15px 0 10px 0;
+  text-align: center;
+  width: 100%;
 }
 
 /* Resaltar inputs con error */
 .input-error {
-box-shadow: 
-  5px 5px 10px #a3b1c6, 
-  -5px -5px 10px #ffffff,
-  inset 0 0 8px rgba(255, 0, 0, 0.3) !important;
+  box-shadow: 
+    5px 5px 10px #a3b1c6, 
+    -5px -5px 10px #ffffff,
+    inset 0 0 8px rgba(255, 0, 0, 0.3) !important;
 }
 
 /* Contenedor de contraseña */
 .password-container {
-position: relative;
-width: 100%;
-margin-bottom: 20px;
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
 }
 
 /* Ojo para mostrar/ocultar contraseña */
 .toggle-password {
-position: absolute;
-right: 15px;
-top: 50%;
-transform: translateY(-50%);
-background: transparent;
-border: none;
-cursor: pointer;
-font-size: 1.2rem;
-opacity: 0.6;
-transition: opacity 0.3s;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  opacity: 0.6;
+  transition: opacity 0.3s;
 }
 
 .toggle-password:hover {
-opacity: 1;
+  opacity: 1;
 }
 
 /* Efecto para el botón cuando está deshabilitado */
 .neumorphic-button:disabled {
-opacity: 0.7;
-cursor: not-allowed;
-box-shadow: none;
+  opacity: 0.7;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Estilo para el enlace de registro */
+.register-link {
+  --color: var(--ion-color-primary);
+  margin-top: 15px;
+  text-transform: none;
+  font-size: 0.9rem;
+}
+
+.register-link:hover {
+  --color: var(--ion-color-primary-shade);
+}
+
+.login-links {
+  width: 100%;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.login-title {
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
 }

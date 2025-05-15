@@ -1,88 +1,56 @@
 import {
   IonHeader,
   IonToolbar,
-  IonTitle,
   IonButtons,
   IonButton,
   IonIcon,
-  IonMenu,
-  IonContent,
-  IonList,
-  IonItem,
-  IonMenuButton,
 } from "@ionic/react";
-import {
-  menuOutline,
-  logOutOutline,
-  cashOutline,
-  personCircleOutline,
-} from "ionicons/icons";
+import { menuOutline, logOutOutline } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import "./CustomHeader.css";
 
 interface CustomHeaderProps {
-  pageName: string;
-  showMenuButton?: boolean;
-  showLogoutButton?: boolean;
+  showMenuButton: boolean;
+  showLogoutButton: boolean;
+  hideTitle?: boolean; // Nueva prop para ocultar el título
 }
 
 const CustomHeader: React.FC<CustomHeaderProps> = ({
-  pageName,
-  showMenuButton = true,
-  showLogoutButton = true,
+  showMenuButton,
+  showLogoutButton,
+  hideTitle = false, // Valor por defecto
 }) => {
   const history = useHistory();
 
   const handleLogout = () => {
-    history.push("/welcome");
+    history.push("/login");
   };
 
   return (
-    <>
-      <IonMenu contentId="main-content" side="start">
-        <IonContent>
-          <IonList>
-            <IonItem routerLink="/login" routerDirection="root">
-              Login
-            </IonItem>
-            <IonItem routerLink="/create-person" routerDirection="root">
-              Crear Persona
-            </IonItem>
-            <IonItem routerLink="/create-reservation" routerDirection="root">
-              Crear Reserva
-            </IonItem>
-          </IonList>
-        </IonContent>
-      </IonMenu>
+    <IonHeader className="custom-header">
+      <IonToolbar className="custom-toolbar">
+        {showMenuButton && (
+          <IonButtons slot="start">
+            <IonButton className="menu-button">
+              <IonIcon icon={menuOutline} className="menu-icon" />
+            </IonButton>
+          </IonButtons>
+        )}
 
-      <IonHeader className="custom-header">
-        <IonToolbar>
-          {showMenuButton && (
-            <IonButtons slot="start">
-              <IonMenuButton autoHide={false}>
-                <IonIcon icon={menuOutline} />
-              </IonMenuButton>
-            </IonButtons>
-          )}
+        {/* Eliminamos IonTitle si hideTitle es true */}
+        {!hideTitle && (
+          <div className="header-title-space"></div> // Espacio reservado
+        )}
 
-          <div className="header-center">
-            <IonIcon icon={cashOutline} className="header-icon" />
-            <IonTitle>{pageName}</IonTitle>
-          </div>
-
-          {showLogoutButton && (
-            <IonButtons slot="end">
-              <IonButton onClick={handleLogout}>
-                <IonIcon icon={logOutOutline} />
-              </IonButton>
-              <IonButton>
-                <IonIcon icon={personCircleOutline} />
-              </IonButton>
-            </IonButtons>
-          )}
-        </IonToolbar>
-      </IonHeader>
-    </>
+        {showLogoutButton && (
+          <IonButtons slot="end">
+            <IonButton className="logout-button" onClick={handleLogout}>
+              <IonIcon icon={logOutOutline} className="logout-icon" />
+            </IonButton>
+          </IonButtons>
+        )}
+      </IonToolbar>
+    </IonHeader>
   );
 };
 

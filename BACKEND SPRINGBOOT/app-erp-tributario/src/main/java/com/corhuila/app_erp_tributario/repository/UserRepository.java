@@ -9,6 +9,9 @@ import com.corhuila.app_erp_tributario.Entity.User;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+
+    boolean existsByEmail(String email);
+
     Optional<User> findByEmail(String email);
 
 }

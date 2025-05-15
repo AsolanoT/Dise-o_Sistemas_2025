@@ -1,0 +1,39 @@
+/* Estilos comunes para ambos layouts */
+.auth-content, .main-content {
+    --background: #f5f5f5;
+  }
+  
+  .auth-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+  }
+  
+  /* Estilos específicos para AuthLayout */
+  .auth-content {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .auth-container {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  /* Estilos específicos para MainLayout */
+  .main-content {
+    padding-top: 56px; /* Ajuste para el header */
+  }
+  
+  .main-container {
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+  
+  @media (min-width: 768px) {
+    .main-container {
+      padding: 20px;
+    }
+  }

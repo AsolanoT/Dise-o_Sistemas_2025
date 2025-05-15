@@ -1,42 +1,43 @@
-.custom-header ion-toolbar {
-    --background: #321b15ss;
-    --color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 16px;
-  }
-  
-  .custom-header ion-toolbar ion-buttons {
-    min-width: 50px;
-  }
-  
-  .custom-header ion-toolbar ion-buttons ion-icon {
-    font-size: 30px;
-  }
-  
-  .custom-header .header-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: auto;
-    height: 10%;
-    max-width: 60%;
-  }
-  
-  .custom-header .header-center .header-icon {
-    font-size: 30px;
-    margin-right: 8px;
-    color: white;
-  }
-  
-  .custom-header .header-center ion-title {
-    padding: 0;
-    font-size: 1.1rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+.custom-header {
+  --background: var(--ion-color-primary);
+  --color: white;
+}
+
+.custom-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.header-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0;
+  padding: 0 10px;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.menu-button, .logout-button {
+  --color: white;
+  --background-hover: rgba(255, 255, 255, 0.1);
+}
+
+/* Estilos para el icono de menú y logout */
+.menu-icon, .logout-icon {
+  font-size: 1.5rem;
+}
+
+/* Efecto hover para los botones */
+.menu-button:hover, .logout-button:hover {
+  opacity: 0.8;
+}
+
+.header-title-space {
+  flex: 1;
+  text-align: center;
+}

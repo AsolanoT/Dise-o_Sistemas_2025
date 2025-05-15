@@ -1,5 +1,4 @@
 import {
-  IonPage,
   IonContent,
   IonInput,
   IonButton,
@@ -7,10 +6,10 @@ import {
   IonLoading,
 } from "@ionic/react";
 import { useState } from "react";
-import CustomHeader from "../../components/CustomHeader/CustomHeader";
 import "./Login.css";
+import AuthLayout from "../../components/layouts/AuthLayout";
 
-// Mock de usuarios por roles (esto luego se reemplazará por la API real)
+// Mock de usuarios por roles
 const mockUsers = [
   {
     username: "admin",
@@ -51,7 +50,6 @@ const Login: React.FC = () => {
       ...prev,
       [field]: value,
     }));
-    // Limpiar errores al escribir
     setErrors((prev) => ({
       ...prev,
       [field]: "",
@@ -93,7 +91,6 @@ const Login: React.FC = () => {
 
     setLoading(true);
 
-    // Simulación de llamada a API con timeout
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -104,18 +101,14 @@ const Login: React.FC = () => {
       );
 
       if (userFound) {
-        // Aquí normalmente guardarías el token o sesión
         console.log("Login exitoso:", userFound);
         setAttempts(0);
-        // Redirección basada en rol
         window.location.href = `${userFound.role.toLowerCase()}`;
       } else {
         setAttempts((prev) => prev + 1);
         setErrors((prev) => ({
           ...prev,
-          general:
-            "Credenciales incorrectas. Intentos restantes: " +
-            (5 - attempts - 1),
+          general: `Credenciales incorrectas. Intentos restantes: ${5 - attempts - 1}`,
         }));
       }
     } catch (error) {
@@ -135,26 +128,15 @@ const Login: React.FC = () => {
   };
 
   return (
-    <IonPage id="main-content">
-      <CustomHeader
-        pageName="Login"
-        showMenuButton={false}
-        showLogoutButton={false}
-      />
-
-      <IonContent className="login-content">
+      <AuthLayout showHeader={false}>      <IonContent className="login-content">
         <div className="login-container">
           <div className="neumorphic-card">
-            <h1>Acceso al Sistema Tributario</h1>
-
-            {/* Mensaje de error general */}
             {errors.general && (
               <IonText color="danger" className="error-message">
                 <p>{errors.general}</p>
               </IonText>
             )}
 
-            {/* Campo Usuario */}
             <IonInput
               className={`neumorphic-input ${
                 errors.username ? "input-error" : ""
@@ -172,7 +154,6 @@ const Login: React.FC = () => {
               </IonText>
             )}
 
-            {/* Campo Contraseña */}
             <div className="password-container">
               <IonInput
                 className={`neumorphic-input ${
@@ -200,28 +181,30 @@ const Login: React.FC = () => {
               </IonText>
             )}
 
-            {/* Botón de Login */}
             <IonButton
               className="neumorphic-button"
               expand="block"
               onClick={handleLogin}
               disabled={loading}
             >
-              {loading ? "Verificando..." : "Iniciar Sesión"}
+              {loading ? "Verificando..." : "INICIAR SESIÓN"}
             </IonButton>
 
-            {/* Enlace de recuperación */}
             <div className="login-links">
-              <a href="#recuperar" className="link-text">
-                ¿Olvidó su contraseña?
-              </a>
+              <IonButton 
+                fill="clear" 
+                routerLink="/usuario"
+                className="register-link"
+              >
+                ¿No tienes cuenta? Regístrate
+              </IonButton>
             </div>
           </div>
         </div>
 
         <IonLoading isOpen={loading} message="Autenticando..." />
       </IonContent>
-    </IonPage>
+    </AuthLayout>
   );
 };
 
