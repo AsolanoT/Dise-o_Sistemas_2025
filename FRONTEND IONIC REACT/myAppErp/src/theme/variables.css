@@ -1,2 +1,18 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
+:root {
+  /* Colores principales */
+  --ion-background-color: #f4f6f8; /* Color de fondo base */
+  --ion-text-color: #2d3e50; /* Color de texto principal */
+  
+  /* Fondo global con gradiente */
+  --erp-background-gradient: linear-gradient(135deg, #4a90e2, #50c9c3);
+}
+
+body {
+  background: var(--erp-background-gradient); /* Aplicar el fondo */
+  background-attachment: fixed; /* Fijar el fondo para todas las páginas */
+  background-size: cover;
+  color: var(--ion-text-color); /* Aplicar el color de texto */
+  font-family: 'Inter', sans-serif; /* Fuente moderna */
+}

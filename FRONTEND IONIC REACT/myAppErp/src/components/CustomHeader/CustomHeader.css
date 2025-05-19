@@ -1,7 +1,7 @@
 .custom-header {
   background: #18283F !important;
   ion-toolbar {
-    --background: #000000;
+    --background: #15297c;
     --color: white;
     display: flex;
     justify-content: space-between;

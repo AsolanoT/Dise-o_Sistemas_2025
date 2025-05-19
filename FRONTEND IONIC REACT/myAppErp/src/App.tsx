@@ -31,6 +31,7 @@ import ContribuyenteRegistration from "./pages/Registration/Contribuyente/Contri
 import InvoiceGenerator from "./pages/Invoicing/InvoiceGenerator";
 import TipoTributoPage from "./pages/TributeType/TipoTributoPage";
 import UserForm from "./pages/Registration/User/UserForm";
+import HomeScreen from "./pages/Home/HomeScreen";
 
 setupIonicReact();
 
@@ -69,6 +70,12 @@ const App: React.FC = () => (
         <Route exact path="/usuario">
           <MainLayout pageName="Registro de Usuario">
             <UserForm />
+          </MainLayout>
+        </Route>
+
+        <Route exact path="/home">
+          <MainLayout pageName="Pagina Principal">
+            <HomeScreen />
           </MainLayout>
         </Route>
       </IonRouterOutlet>
