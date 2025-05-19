@@ -9,8 +9,8 @@ import jakarta.persistence.*;
 public class Factura extends ABaseEntity {
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "contribuyente_id", referencedColumnName = "id")
-    private Contribuyente contribuyente;
+    @JoinColumn(name = "Usuario_id", referencedColumnName = "id")
+    private User user;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "tipo_tributo_id", referencedColumnName = "id")

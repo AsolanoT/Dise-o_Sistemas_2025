@@ -1,6 +1,8 @@
 package com.corhuila.app_erp_tributario.Service;
 
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +10,9 @@ import com.corhuila.app_erp_tributario.DTO.LoginDto;
 import com.corhuila.app_erp_tributario.DTO.UserDto;
 import com.corhuila.app_erp_tributario.Entity.User;
 import com.corhuila.app_erp_tributario.Entity.VerificationCode;
+import com.corhuila.app_erp_tributario.IRepository.IBaseRepository;
+import com.corhuila.app_erp_tributario.IRepository.IUserRepository;
+import com.corhuila.app_erp_tributario.IService.IUserService;
 import com.corhuila.app_erp_tributario.repository.UserRepository;
 import com.corhuila.app_erp_tributario.repository.VerificationCodeRepository;
 
@@ -15,7 +20,16 @@ import java.time.LocalDateTime;
 import java.util.Random;
 
 @Service
-public class AuthService {
+public class AuthService extends ABaseService<User> implements IUserService {
+
+    @Override
+    protected IBaseRepository<User, Long> getRepository() {
+        return repository;
+    }
+
+    @Autowired
+    private IUserRepository repository;
+
     private final UserRepository userRepository;
     private final VerificationCodeRepository codeRepository;
     private final EmailService emailService;
@@ -31,14 +45,18 @@ public class AuthService {
 
     public void registerUser(UserDto userDto) {
         User user = new User();
-        user.setDocumentType(userDto.getDocumentType());
-        user.setDocumentNumber(userDto.getDocumentNumber());
-        user.setFullName(userDto.getFullName());
-        user.setBirthDate(userDto.getBirthDate());
+        user.setTipo_documento(userDto.getTipo_documento());
+        user.setNumero_documento(userDto.getNumero_documento());
+        user.setNombre(userDto.getNombre());
+        user.setDireccion(userDto.getDireccion());
+        user.setTelefono(userDto.getTelefono());
         user.setEmail(userDto.getEmail());
-        user.setPhone(userDto.getPhone());
+        user.setBirthDate(userDto.getBirthDate());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setRole(userDto.getRole());
+        user.setTipocontribuyente(userDto.getTipocontribuyente());
+        user.setTipo_actividad(userDto.getTipo_actividad());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
         userRepository.save(user);
 

@@ -16,29 +16,44 @@ import lombok.Data;
 @Data
 public class UserDto {
     @NotBlank(message = "El tipo de documento es requerido")
-    private String documentType;
+    private String tipo_documento;
 
     @NotBlank(message = "El número de documento es requerido")
-    @Size(min = 5, message = "El documento debe tener al menos 5 caracteres")
-    private String documentNumber;
+    @Size(min = 5, max = 15, message = "El documento debe tener entre 5 y 15 caracteres")
+    private String numero_documento;
 
-    @NotBlank(message = "El nombre completo es requerido")
-    private String fullName;
+    @NotBlank(message = "El nombre es requerido")
+    @Size(max = 100, message = "El nombre debe tener máximo 100 caracteres")
+    private String nombre;
 
-    @NotNull(message = "La fecha de nacimiento es requerida")
-    @JsonFormat(pattern = "yyyy-MM-dd") // Añade esta anotación
-    private LocalDate birthDate;
+    @NotBlank(message = "La dirección es requerida")
+    @Size(max = 80, message = "La dirección debe tener máximo 80 caracteres")
+    private String direccion;
+
+    @NotBlank(message = "El teléfono es requerido")
+    @Size(max = 15, message = "El teléfono debe tener máximo 15 caracteres")
+    private String telefono;
 
     @Email(message = "Debe ser un email válido")
     @NotBlank(message = "El email es requerido")
+    @Size(max = 100, message = "El email debe tener máximo 100 caracteres")
     private String email;
 
-    @NotBlank(message = "El teléfono es requerido")
-    private String phone;
+    @NotNull(message = "La fecha de nacimiento es requerida")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthDate;
 
-    @NotBlank
-    @Size(min = 8)
+    @NotBlank(message = "La contraseña es requerida")
+    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     private String password;
+
+    @NotBlank(message = "El tipo de contribuyente es requerido")
+    @Size(max = 50, message = "El tipo de contribuyente debe tener máximo 50 caracteres")
+    private String tipocontribuyente;
+
+    @NotBlank(message = "El tipo de actividad es requerido")
+    @Size(max = 100, message = "El tipo de actividad debe tener máximo 100 caracteres")
+    private String tipo_actividad;
 
     @NotNull(message = "El rol es requerido")
     private Role role;

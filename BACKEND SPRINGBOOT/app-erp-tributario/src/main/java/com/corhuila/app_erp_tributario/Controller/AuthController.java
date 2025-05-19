@@ -15,16 +15,18 @@ import org.springframework.web.bind.annotation.*;
 import com.corhuila.app_erp_tributario.DTO.LoginDto;
 import com.corhuila.app_erp_tributario.DTO.UserDto;
 import com.corhuila.app_erp_tributario.Entity.User;
+import com.corhuila.app_erp_tributario.IService.IUserService;
 import com.corhuila.app_erp_tributario.Service.AuthService;
 
 import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/api/auth")
-public class AuthController {
+public class AuthController extends ABaseController<User, IUserService> {
     private final AuthService authService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, IUserService service) {
+        super(service, "User");
         this.authService = authService;
     }
 
