@@ -46,6 +46,7 @@ public class AuthService extends ABaseService<User> implements IUserService {
     public void registerUser(UserDto userDto) {
         User user = new User();
         user.setTipo_documento(userDto.getTipo_documento());
+        user.setStatus(userDto.getStatus());
         user.setNumero_documento(userDto.getNumero_documento());
         user.setNombre(userDto.getNombre());
         user.setDireccion(userDto.getDireccion());

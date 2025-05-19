@@ -6,9 +6,6 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "users")
 public class User extends ABaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Column(name = "tipo_documento", nullable = false, length = 50)
     private String tipo_documento;
@@ -49,14 +46,6 @@ public class User extends ABaseEntity {
 
     @Column(nullable = false)
     private boolean estado = true;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getTipo_documento() {
         return tipo_documento;

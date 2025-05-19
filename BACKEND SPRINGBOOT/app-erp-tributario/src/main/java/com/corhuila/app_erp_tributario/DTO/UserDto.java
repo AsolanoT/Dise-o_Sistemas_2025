@@ -18,6 +18,9 @@ public class UserDto {
     @NotBlank(message = "El tipo de documento es requerido")
     private String tipo_documento;
 
+    @NotNull(message = "El estado es requerido")
+    private Boolean status;
+
     @NotBlank(message = "El número de documento es requerido")
     @Size(min = 5, max = 15, message = "El documento debe tener entre 5 y 15 caracteres")
     private String numero_documento;
