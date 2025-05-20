@@ -31,8 +31,8 @@ public class User extends ABaseEntity {
     @Column(nullable = false)
     private String password;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "id_rol", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "role_id") // Asegúrate de que coincida con tu BD
     private Role role; // 'Administrador', 'Contribuyente', 'entiddad'
 
     @Column(name = "tipo_contribuyente", nullable = false, length = 50)
@@ -150,5 +150,7 @@ public class User extends ABaseEntity {
     public void setEstado(boolean estado) {
         this.estado = estado;
     }
+
+    
 
 }

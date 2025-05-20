@@ -12,7 +12,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { eye, eyeOff, mailOutline, lockClosedOutline } from "ionicons/icons";
 import "./Login.css";
-import loginUser from "../../../services/userService";
+import { authService } from "../../../services/auth.service";
 
 const Login: React.FC = () => {
   const history = useHistory();
@@ -34,7 +34,6 @@ const Login: React.FC = () => {
       ...prev,
       [field]: value,
     }));
-    // Limpiar errores al escribir
     setErrors((prev) => ({
       ...prev,
       [field]: "",
@@ -72,21 +71,14 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await loginUser.login({
-        email: formData.email.toLowerCase().trim(),
-        password: formData.password,
-      });
+      await authService.login(
+        formData.email.toLowerCase().trim(),
+        formData.password
+      );
 
-      // Redirección basada en rol (ajusta según tu lógica)
-      if (response.user) {
-        const rolePath =
-          response.user.role.id === "1"
-            ? "admin"
-            : response.user.role.id === "2"
-            ? "entidad"
-            : "contribuyente";
-        history.push(`/${rolePath}`);
-      }
+      // La redirección la manejará RoleRedirector o algún otro componente según el rol
+      // Aquí podrías redirigir a una ruta genérica si se desea, por ejemplo:
+      // history.push("/redirector");
     } catch (error: any) {
       console.error("Error en login:", error);
       setErrors((prev) => ({
@@ -117,14 +109,12 @@ const Login: React.FC = () => {
           <div className="neumorphic-card">
             <h1>Acceso al Sistema Tributario</h1>
 
-            {/* Mensaje de error general */}
             {errors.general && (
               <IonText color="danger" className="error-message">
                 <p>{errors.general}</p>
               </IonText>
             )}
 
-            {/* Campo Email */}
             <div className="input-group">
               <IonIcon icon={mailOutline} className="input-icon" />
               <IonInput
@@ -144,7 +134,6 @@ const Login: React.FC = () => {
               </IonText>
             )}
 
-            {/* Campo Contraseña */}
             <div className="input-group">
               <IonIcon icon={lockClosedOutline} className="input-icon" />
               <div className="password-container">
@@ -173,7 +162,6 @@ const Login: React.FC = () => {
               </IonText>
             )}
 
-            {/* Botón de Login */}
             <IonButton
               className="neumorphic-button"
               expand="block"
@@ -183,7 +171,6 @@ const Login: React.FC = () => {
               {loading ? "Verificando..." : "Iniciar Sesión"}
             </IonButton>
 
-            {/* Enlaces adicionales */}
             <div className="login-links">
               <IonButton
                 fill="clear"

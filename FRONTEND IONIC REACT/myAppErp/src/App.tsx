@@ -32,6 +32,10 @@ import UserForm from "./pages/Registration/Usuarios/UserForm";
 import HomeScreen from "./pages/inicio/HomeScreen";
 import VerifyEmail from "./pages/auth/VerifyEmail/VerifyEmail";
 import { TipoTributoPage } from "./pages/Registration/TipoTributo/TipoTributoPage";
+import RoleRedirector from "./components/RoleRedirector";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import EntidadDashboard from "./pages/entidad/EntidadDashboard";
+import ContribuyenteDashboard from "./pages/contribuyente/ContribuyenteDashboard";
 
 setupIonicReact();
 
@@ -39,6 +43,11 @@ const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
+        {/* Ruta de redirección por rol */}
+        <Route exact path="/">
+          <RoleRedirector />
+        </Route>
+
         {/* Rutas públicas (sin menú) */}
         <Route exact path="/login">
           <AuthLayout pageName="Iniciar Sesión">
@@ -47,15 +56,31 @@ const App: React.FC = () => (
         </Route>
 
         <Route exact path="/verify-email">
-          <AuthLayout pageName="Iniciar Sesión">
+          <AuthLayout pageName="Verificación de Email">
             <VerifyEmail />
           </AuthLayout>
         </Route>
 
-        <Redirect exact from="/" to="/login" />
+        {/* Dashboards por rol */}
+        <Route exact path="/admin">
+          <MainLayout pageName="Administrador">
+            <AdminDashboard />
+          </MainLayout>
+        </Route>
 
-        {/* Rutas privadas (con menú) */}
+        <Route exact path="/entidad">
+          <MainLayout pageName="Entidad Pública">
+            <EntidadDashboard />
+          </MainLayout>
+        </Route>
 
+        <Route exact path="/contribuyente">
+          <MainLayout pageName="Contribuyente">
+            <ContribuyenteDashboard />
+          </MainLayout>
+        </Route>
+
+        {/* Rutas existentes */}
         <Route exact path="/factura">
           <MainLayout pageName="Generador de Factura">
             <InvoiceGenerator />
@@ -75,10 +100,13 @@ const App: React.FC = () => (
         </Route>
 
         <Route exact path="/home">
-          <MainLayout pageName="Pagina Principal">
+          <MainLayout pageName="Página Principal">
             <HomeScreen />
           </MainLayout>
         </Route>
+
+        {/* Redirección por defecto */}
+        <Redirect to="/" />
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
