@@ -79,15 +79,10 @@ const HomeScreen: React.FC = () => {
   return (
     <IonPage>
       <CustomHeader
-        pageName="Pagina Principal"
+        pageName="ERP Tributario"
         showMenuButton={true}
         showLogoutButton={true}
       />
-      <IonHeader>
-        <IonToolbar color="primary">
-          <IonTitle>ERP Tributario</IonTitle>
-        </IonToolbar>
-      </IonHeader>
 
       <IonContent fullscreen className="ion-padding">
         <div className="welcome-section">

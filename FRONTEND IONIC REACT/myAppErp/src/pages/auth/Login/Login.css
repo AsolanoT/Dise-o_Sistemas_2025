@@ -1,0 +1,179 @@
+.login-content {
+  --background: #578fdc9d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #ece8e0;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.neumorphic-card {
+  background: #e0e5ec;
+  border-radius: 20px;
+  box-shadow: 10px 10px 20px #a3b1c6, -10px -10px 20px #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  margin: auto;
+}
+
+.neumorphic-card h1 {
+  color: var(--ion-color-primary);
+  margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: 550;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+}
+
+.input-group {
+  width: 100%;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #181d24;
+  z-index: 2;
+}
+
+.neumorphic-input {
+  background: #e0e5ec;
+  border-radius: 20px;
+  box-shadow: 10px 10px 20px #a3b1c6, -10px -10px 20px #ffffff;
+  width: 100%;
+  height: 45px;
+  border: none;
+  outline: none;
+  padding: 0 15px 0 45px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #161718;
+}
+
+/* ESTILOS PARA EL PLACEHOLDER (MISMO COLOR PARA AMBOS) */
+.neumorphic-input::placeholder {
+  color: #5a5a5a; /* Color gris medio para el placeholder */
+  opacity: 1;
+}
+.neumorphic-input::-webkit-input-placeholder {
+  color: #5a5a5a;
+}
+.neumorphic-input::-moz-placeholder {
+  color: #5a5a5a;
+  opacity: 1;
+}
+.neumorphic-input:-ms-input-placeholder {
+  color: #5a5a5a;
+}
+.neumorphic-input:-moz-placeholder {
+  color: #5a5a5a;
+  opacity: 1;
+}
+
+.neumorphic-input:focus {
+  background: #e0e5ec;
+  border-radius: 20px;
+  box-shadow: inset 10px 10px 20px #a3b1c6, inset -10px -10px 20px #ffffff;
+}
+
+.neumorphic-button {
+  --background: var(--ion-color-primary);
+  --background-activated: var(--ion-color-primary-shade);
+  --background-focused: var(--ion-color-primary-shade);
+  --background-hover: var(--ion-color-primary-shade);
+  border-radius: 20px;
+  box-shadow: 10px 10px 20px #a3b1c6, -10px -10px 20px #ffffff;
+  width: 100%;
+  height: 45px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.neumorphic-button:active {
+  box-shadow: inset 10px 10px 20px #a3b1c6, inset -10px -10px 20px #ffffff;
+}
+
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #161718;
+  z-index: 2;
+}
+
+.error-message {
+  color: var(--ion-color-danger);
+  font-size: 0.8rem;
+  margin: -15px 0 10px 0;
+  text-align: center;
+  width: 100%;
+}
+
+.input-error {
+  box-shadow: 
+    5px 5px 10px #a3b1c6, 
+    -5px -5px 10px #ffffff,
+    inset 0 0 8px rgba(255, 0, 0, 0.3) !important;
+}
+
+.login-links {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.link-text {
+  color: var(--ion-color-primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.link-text:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .neumorphic-card {
+    padding: 20px;
+    width: 95%;
+  }
+  
+  .login-links {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

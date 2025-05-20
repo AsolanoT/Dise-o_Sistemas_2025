@@ -19,6 +19,9 @@ public class Factura extends ABaseEntity {
     @Column(name = "periodo", nullable = false, length = 7)
     private String periodo;
 
+    @Column(name = "base_calculo", nullable = false)
+    private Double baseCalculo;
+
     @Column(name = "valor_estimado", nullable = false)
     private Double valorEstimado;
 
@@ -96,6 +99,14 @@ public class Factura extends ABaseEntity {
 
     public void setFechaVencimiento(LocalDate fechaVencimiento) {
         this.fechaVencimiento = fechaVencimiento;
+    }
+
+    public Double getBaseCalculo() {
+        return baseCalculo;
+    }
+
+    public void setBaseCalculo(Double baseCalculo) {
+        this.baseCalculo = baseCalculo;
     }
 
 }

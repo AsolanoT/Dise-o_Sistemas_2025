@@ -26,12 +26,12 @@ import "@ionic/react/css/palettes/dark.system.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import Login from "./pages/Login/Login";
-import ContribuyenteRegistration from "./pages/Registration/Contribuyente/ContribuyenteRegistration";
+import Login from "./pages/auth/Login/Login";
 import InvoiceGenerator from "./pages/Invoicing/InvoiceGenerator";
-import TipoTributoPage from "./pages/TributeType/TipoTributoPage";
-import UserForm from "./pages/Registration/User/UserForm";
-import HomeScreen from "./pages/Home/HomeScreen";
+import UserForm from "./pages/Registration/Usuarios/UserForm";
+import HomeScreen from "./pages/inicio/HomeScreen";
+import VerifyEmail from "./pages/auth/VerifyEmail/VerifyEmail";
+import { TipoTributoPage } from "./pages/Registration/TipoTributo/TipoTributoPage";
 
 setupIonicReact();
 
@@ -46,14 +46,15 @@ const App: React.FC = () => (
           </AuthLayout>
         </Route>
 
+        <Route exact path="/verify-email">
+          <AuthLayout pageName="Iniciar Sesión">
+            <VerifyEmail />
+          </AuthLayout>
+        </Route>
+
         <Redirect exact from="/" to="/login" />
 
         {/* Rutas privadas (con menú) */}
-        <Route exact path="/contribuyente">
-          <MainLayout pageName="Registro de Contribuyente">
-            <ContribuyenteRegistration />
-          </MainLayout>
-        </Route>
 
         <Route exact path="/factura">
           <MainLayout pageName="Generador de Factura">

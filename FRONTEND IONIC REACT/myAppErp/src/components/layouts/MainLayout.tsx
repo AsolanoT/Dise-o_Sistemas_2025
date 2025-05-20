@@ -62,7 +62,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, pageName }) => {
               <IonItem
                 button
                 className="menu-item"
-                onClick={() => handleNavigation("/dashboard")}
+                onClick={() => handleNavigation("/home")}
               >
                 <IonIcon
                   slot="start"
@@ -85,36 +85,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, pageName }) => {
                   className="menu-icon"
                 />
                 <IonLabel>Crear tipos de tributo</IonLabel>
-              </IonItem>
-            </IonMenuToggle>
-
-            <IonMenuToggle autoHide={false}>
-              <IonItem
-                button
-                className="menu-item"
-                onClick={() => handleNavigation("/tipo-contribuyente")}
-              >
-                <IonIcon
-                  slot="start"
-                  icon={peopleOutline}
-                  className="menu-icon"
-                />
-                <IonLabel>Crear Tipo de Contribuyentes</IonLabel>
-              </IonItem>
-            </IonMenuToggle>
-
-            <IonMenuToggle autoHide={false}>
-              <IonItem
-                button
-                className="menu-item"
-                onClick={() => handleNavigation("/contribuyente")}
-              >
-                <IonIcon
-                  slot="start"
-                  icon={locationOutline}
-                  className="menu-icon"
-                />
-                <IonLabel>Crear Contribuyente</IonLabel>
               </IonItem>
             </IonMenuToggle>
 
