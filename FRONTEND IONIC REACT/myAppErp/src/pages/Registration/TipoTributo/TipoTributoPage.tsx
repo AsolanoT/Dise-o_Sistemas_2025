@@ -186,113 +186,125 @@ export function TipoTributoPage() {
       />
 
       <IonContent class="tipo-tributo-registration ion-padding">
-        <IonLoading isOpen={isLoading} message="Cargando datos..." />
+        <form onSubmit={handleSubmit} className="user-form">
+          <h2 className="form-title">Registro de Usuarios</h2>
 
-        <h2>{id ? "Editar Tipo de Tributo" : "Registro de Tipo de Tributo"}</h2>
+          <IonLoading isOpen={isLoading} message="Cargando datos..." />
 
-        {/* Nombre */}
-        <IonItem className="custom-item">
-          <IonIcon
-            icon={documentTextOutline}
-            slot="start"
-            className="custom-icon"
+          <h2>
+            {id ? "Editar Tipo de Tributo" : "Registro de Tipo de Tributo"}
+          </h2>
+
+          {/* Nombre */}
+          <IonItem className="custom-item">
+            <IonIcon
+              icon={documentTextOutline}
+              slot="start"
+              className="custom-icon"
+            />
+            <IonLabel>Nombre</IonLabel>
+          </IonItem>
+          <IonInput
+            value={formData.nombre}
+            placeholder="Ingrese el nombre del tributo"
+            onIonChange={(e) => handleInputChange("nombre", e.detail.value)}
           />
-          <IonLabel>Nombre</IonLabel>
-        </IonItem>
-        <IonInput
-          value={formData.nombre}
-          placeholder="Ingrese el nombre del tributo"
-          onIonChange={(e) => handleInputChange("nombre", e.detail.value)}
-        />
-        {errors.nombre && <IonText className="error">{errors.nombre}</IonText>}
+          {errors.nombre && (
+            <IonText className="error">{errors.nombre}</IonText>
+          )}
 
-        {/* Descripción */}
-        <IonItem className="custom-item">
-          <IonIcon
-            icon={informationCircleOutline}
-            slot="start"
-            className="custom-icon"
-          />
-          <IonLabel>Descripción</IonLabel>
-        </IonItem>
-        <IonTextarea
-          value={formData.descripcion}
-          placeholder="Ingrese una descripción del tributo"
-          rows={3}
-          onIonChange={(e) => handleInputChange("descripcion", e.detail.value)}
-        />
-        {errors.descripcion && (
-          <IonText className="error">{errors.descripcion}</IonText>
-        )}
-
-        {/* Tarifa */}
-        <IonItem className="custom-item">
-          <IonIcon icon={cashOutline} slot="start" className="custom-icon" />
-          <IonLabel>Tarifa (%)</IonLabel>
-        </IonItem>
-        <IonInput
-          type="number"
-          value={formData.tarifa}
-          placeholder="Ingrese la tarifa porcentual"
-          onIonChange={(e) =>
-            handleInputChange(
-              "tarifa",
-              e.detail.value ? parseFloat(e.detail.value) : 0
-            )
-          }
-        />
-        {errors.tarifa && <IonText className="error">{errors.tarifa}</IonText>}
-
-        {/* Periodicidad */}
-        <IonItem className="custom-item">
-          <IonIcon
-            icon={calendarOutline}
-            slot="start"
-            className="custom-icon"
-          />
-          <IonLabel position="stacked">Periodicidad</IonLabel>
-          <IonSelect
-            interface="alert"
-            placeholder="Seleccione la periodicidad"
-            value={formData.periodicidad}
+          {/* Descripción */}
+          <IonItem className="custom-item">
+            <IonIcon
+              icon={informationCircleOutline}
+              slot="start"
+              className="custom-icon"
+            />
+            <IonLabel>Descripción</IonLabel>
+          </IonItem>
+          <IonTextarea
+            value={formData.descripcion}
+            placeholder="Ingrese una descripción del tributo"
+            rows={3}
             onIonChange={(e) =>
-              handleInputChange("periodicidad", e.detail.value)
+              handleInputChange("descripcion", e.detail.value)
             }
-          >
-            {periodicidades.map((period) => (
-              <IonSelectOption key={period.value} value={period.value}>
-                {period.label}
-              </IonSelectOption>
-            ))}
-          </IonSelect>
-        </IonItem>
-        {errors.periodicidad && (
-          <IonText className="error">{errors.periodicidad}</IonText>
-        )}
+          />
+          {errors.descripcion && (
+            <IonText className="error">{errors.descripcion}</IonText>
+          )}
 
-        {/* Botones de acción */}
-        <div className="button-row">
-          <IonButton
-            expand="block"
-            fill="outline"
-            onClick={() => history.goBack()}
-            disabled={isSubmitting}
-          >
-            Cancelar
-          </IonButton>
+          {/* Tarifa */}
+          <IonItem className="custom-item">
+            <IonIcon icon={cashOutline} slot="start" className="custom-icon" />
+            <IonLabel>Tarifa (%)</IonLabel>
+          </IonItem>
+          <IonInput
+            type="number"
+            value={formData.tarifa}
+            placeholder="Ingrese la tarifa porcentual"
+            onIonChange={(e) =>
+              handleInputChange(
+                "tarifa",
+                e.detail.value ? parseFloat(e.detail.value) : 0
+              )
+            }
+          />
+          {errors.tarifa && (
+            <IonText className="error">{errors.tarifa}</IonText>
+          )}
 
-          <IonButton
-            expand="block"
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-          >
-            {isSubmitting
-              ? "Procesando..."
-              : id
-              ? "Actualizar Tributo"
-              : "Registrar Tributo"}
-          </IonButton>
-        </div>
+          {/* Periodicidad */}
+          <IonItem className="custom-item">
+            <IonIcon
+              icon={calendarOutline}
+              slot="start"
+              className="custom-icon"
+            />
+            <IonLabel position="stacked">Periodicidad</IonLabel>
+            <IonSelect
+              interface="alert"
+              placeholder="Seleccione la periodicidad"
+              value={formData.periodicidad}
+              onIonChange={(e) =>
+                handleInputChange("periodicidad", e.detail.value)
+              }
+            >
+              {periodicidades.map((period) => (
+                <IonSelectOption key={period.value} value={period.value}>
+                  {period.label}
+                </IonSelectOption>
+              ))}
+            </IonSelect>
+          </IonItem>
+          {errors.periodicidad && (
+            <IonText className="error">{errors.periodicidad}</IonText>
+          )}
+
+          {/* Botones de acción */}
+          <div className="button-row">
+            <IonButton
+              expand="block"
+              fill="outline"
+              onClick={() => history.goBack()}
+              disabled={isSubmitting}
+            >
+              Cancelar
+            </IonButton>
+
+            <IonButton
+              expand="block"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting
+                ? "Procesando..."
+                : id
+                ? "Actualizar Tributo"
+                : "Registrar Tributo"}
+            </IonButton>
+          </div>
+        </form>
       </IonContent>
 
       {/* Modal de éxito */}
