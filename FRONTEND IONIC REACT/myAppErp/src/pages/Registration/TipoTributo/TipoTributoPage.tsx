@@ -187,13 +187,11 @@ export function TipoTributoPage() {
 
       <IonContent class="tipo-tributo-registration ion-padding">
         <form onSubmit={handleSubmit} className="user-form">
-          <h2 className="form-title">Registro de Usuarios</h2>
-
-          <IonLoading isOpen={isLoading} message="Cargando datos..." />
-
-          <h2>
+          <h2 className="form-title">
             {id ? "Editar Tipo de Tributo" : "Registro de Tipo de Tributo"}
           </h2>
+
+          <IonLoading isOpen={isLoading} message="Cargando datos..." />
 
           {/* Nombre */}
           <IonItem className="custom-item">

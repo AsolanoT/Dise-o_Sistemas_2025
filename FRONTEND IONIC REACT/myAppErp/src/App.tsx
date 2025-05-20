@@ -18,7 +18,6 @@ import "@ionic/react/css/float-elements.css";
 import "@ionic/react/css/text-alignment.css";
 import "@ionic/react/css/text-transformation.css";
 import "@ionic/react/css/flex-utils.css";
-import "@ionic/react/css/display.css";
 
 /* import '@ionic/react/css/palettes/dark.always.css'; */
 /* import '@ionic/react/css/palettes/dark.class.css'; */
@@ -93,7 +92,7 @@ const App: React.FC = () => (
           </MainLayout>
         </Route>
 
-        <Route exact path="/usuario">
+        <Route exact path="/registro-usuario">
           <MainLayout pageName="Registro de Usuario">
             <UserForm />
           </MainLayout>

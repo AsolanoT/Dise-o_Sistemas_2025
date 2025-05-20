@@ -174,7 +174,7 @@ const Login: React.FC = () => {
             <div className="login-links">
               <IonButton
                 fill="clear"
-                onClick={() => history.push("/usuario")}
+                onClick={() => history.push("/registro-usuario")}
                 className="link-text"
               >
                 Registrarse
