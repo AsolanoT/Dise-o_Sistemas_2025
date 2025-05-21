@@ -1,7 +1,7 @@
 // src/components/RoleRedirector.tsx
-import { useEffect } from 'react';
-import { useHistory } from 'react-router-dom'; // Cambiado a useHistory
-import { authService } from '../services/auth.service';
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { authService } from "../services/role.service";
 
 const RoleRedirector = () => {
   const history = useHistory(); // Reemplazado useNavigate por useHistory
@@ -10,22 +10,22 @@ const RoleRedirector = () => {
     const user = authService.getCurrentUser();
 
     if (!user) {
-      history.push('/login'); // Cambiado navigate() por history.push()
+      history.push("/login"); // Cambiado navigate() por history.push()
       return;
     }
 
     switch (user.role?.nombre) {
-      case 'ROLE_ADMIN':
-        history.push('/admin');
+      case "ROLE_ADMIN":
+        history.push("/admin");
         break;
-      case 'ROLE_ENTIDAD_PUBLICA':
-        history.push('/entidad');
+      case "ROLE_ENTIDAD_PUBLICA":
+        history.push("/entidad");
         break;
-      case 'ROLE_CONTRIBUYENTE':
-        history.push('/contribuyente');
+      case "ROLE_CONTRIBUYENTE":
+        history.push("/contribuyente");
         break;
       default:
-        history.push('/login');
+        history.push("/login");
     }
   }, [history]); // Dependencia actualizada
 

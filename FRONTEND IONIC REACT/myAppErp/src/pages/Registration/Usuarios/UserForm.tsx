@@ -1,307 +1,191 @@
-import React, { useState } from "react";
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonContent,
   IonInput,
+  IonButton,
+  IonPage,
+  IonContent,
+  IonItem,
+  IonIcon,
   IonSelect,
   IonSelectOption,
-  IonButton,
   IonLabel,
-  IonAlert,
-  IonLoading,
-  IonItem,
   IonDatetime,
-  IonText,
-  IonIcon,
-  IonTextarea,
+  IonModal,
+  IonButtons,
   useIonToast,
+  IonText,
+  IonLoading,
 } from "@ionic/react";
-import { useHistory } from "react-router-dom";
+
+import { useFormik } from "formik";
+import { useHistory, useParams } from "react-router-dom";
 import {
-  documentTextOutline,
-  eye,
-  eyeOff,
-  informationCircleOutline,
+  cardOutline,
   personOutline,
   homeOutline,
   callOutline,
   mailOutline,
   calendarOutline,
-  lockClosedOutline,
   businessOutline,
-  briefcaseOutline,
+  settingsOutline,
+  saveOutline,
+  arrowBackOutline,
+  lockClosedOutline,
+  eyeOffOutline,
+  eyeOutline,
 } from "ionicons/icons";
+import { useState, useEffect } from "react";
 import "./UserForm.css";
-import userService from "../../../services/userService";
-import CustomHeader from "../../../components/CustomHeader/CustomHeader";
+import { initialValues, validationSchema } from "./user.form";
+import {
+  getUserById,
+  registerUser,
+  updateUser,
+} from "../../../services/auth.service";
 
-interface User {
-  status: boolean;
-  tipo_documento: string;
-  numero_documento: string;
-  nombre: string;
-  direccion: string;
-  telefono: string;
-  email: string;
-  birthDate: string;
-  password: string;
-  tipocontribuyente: string;
-  tipo_actividad: string;
-  role: {
-    id: string;
-  };
-}
-
-const UserForm: React.FC = () => {
+export function UserForm() {
+  const { id } = useParams<{ id: string }>();
   const history = useHistory();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [present] = useIonToast();
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [isLoading, setIsLoading] = useState(!!id);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [form, setForm] = useState<User>({
-    status: true,
-    tipo_documento: "",
-    numero_documento: "",
-    nombre: "",
-    direccion: "",
-    telefono: "",
-    email: "",
-    birthDate: "",
-    password: "",
-    tipocontribuyente: "NATURAL",
-    tipo_actividad: "EMPLEADO",
-    role: {
-      id: "3", // Por defecto contribuyente
+  const formik = useFormik({
+    initialValues: initialValues(),
+    validationSchema: validationSchema(),
+    validateOnChange: false,
+    onSubmit: async (values) => {
+      setIsSubmitting(true);
+      setErrorMessage(null);
+
+      try {
+        if (id) {
+          // Modo edición
+          await updateUser(id, values);
+          present({
+            message: "Usuario actualizado correctamente",
+            duration: 3000,
+            position: "top",
+            color: "success",
+          });
+        } else {
+          // Modo creación
+          await registerUser(values);
+          present({
+            message: "Usuario creado correctamente",
+            duration: 3000,
+            position: "top",
+            color: "success",
+          });
+        }
+
+        history.push("/users");
+      } catch (error: any) {
+        const message = error.message || "Error al guardar el usuario";
+        setErrorMessage(message);
+        present({
+          message,
+          duration: 5000,
+          position: "top",
+          color: "danger",
+        });
+      } finally {
+        setIsSubmitting(false);
+      }
     },
   });
 
-  const documentTypes = [
-    { value: "CEDULA", label: "Cédula de Ciudadanía" },
-    { value: "TARJETA_IDENTIDAD", label: "Tarjeta de Identidad" },
-    { value: "CEDULA_EXTRANJERIA", label: "Cédula de Extranjería" },
-    { value: "PASAPORTE", label: "Pasaporte" },
-    { value: "NIT", label: "NIT" },
-  ];
+  useEffect(() => {
+    if (id) {
+      const loadUserData = async () => {
+        try {
+          const userData = await getUserById(id);
+          formik.setValues({
+            ...userData,
+            password: "",
+            confirmPassword: "",
+          });
+        } catch (error: any) {
+          present({
+            message: error.message || "Error al cargar los datos del usuario",
+            duration: 5000,
+            position: "top",
+            color: "danger",
+          });
+          history.push("/users");
+        } finally {
+          setIsLoading(false);
+        }
+      };
 
-  const contributorTypes = [
-    { value: "NATURAL", label: "Persona Natural" },
-    { value: "JURIDICA", label: "Persona Jurídica" },
-  ];
-
-  const activityTypes = [
-    { value: "EMPLEADO", label: "Empleado" },
-    { value: "INDEPENDIENTE", label: "Independiente" },
-    { value: "EMPRESA", label: "Empresa" },
-  ];
-
-  const roles = [
-    { id: "1", label: "Super Admin" },
-    { id: "2", label: "Entidad Pública" },
-    { id: "3", label: "Contribuyente" },
-  ];
-
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!form.tipo_documento.trim()) {
-      newErrors.tipo_documento = "El tipo de documento es requerido";
+      loadUserData();
     }
+  }, [id]);
 
-    if (!form.numero_documento.trim()) {
-      newErrors.numero_documento = "El número de documento es requerido";
-    } else if (!/^\d+$/.test(form.numero_documento)) {
-      newErrors.numero_documento = "Solo se permiten números";
-    }
-
-    if (!form.nombre.trim()) {
-      newErrors.nombre = "El nombre completo es requerido";
-    } else if (form.nombre.length > 100) {
-      newErrors.nombre = "Máximo 100 caracteres";
-    }
-
-    if (!form.direccion.trim()) {
-      newErrors.direccion = "La dirección es requerida";
-    } else if (form.direccion.length > 200) {
-      newErrors.direccion = "Máximo 200 caracteres";
-    }
-
-    if (!form.telefono.trim()) {
-      newErrors.telefono = "El teléfono es requerido";
-    } else if (!/^\d+$/.test(form.telefono)) {
-      newErrors.telefono = "Solo se permiten números";
-    }
-
-    if (!form.email.trim()) {
-      newErrors.email = "El correo electrónico es requerido";
-    } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
-      newErrors.email = "Ingrese un correo electrónico válido";
-    }
-
-    if (!form.birthDate) {
-      newErrors.birthDate = "La fecha de nacimiento es requerida";
-    }
-
-    if (!form.password) {
-      newErrors.password = "La contraseña es requerida";
-    } else if (form.password.length < 6) {
-      newErrors.password = "Mínimo 6 caracteres";
-    }
-
-    if (!form.role.id) {
-      newErrors.role = "El rol es requerido";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const handleDateConfirm = (date: string) => {
+    formik.setFieldValue("birthDate", date);
+    setShowDatePicker(false);
   };
 
-  const handleInputChange = (field: keyof User, value: any) => {
-    setForm((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-
-    // Limpiar error cuando el campo cambia
-    if (errors[field]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[field];
-        return newErrors;
-      });
-    }
-  };
-
-  const handleRoleChange = (roleId: string) => {
-    setForm((prev) => ({
-      ...prev,
-      role: {
-        id: roleId,
-      },
-    }));
-
-    if (errors.role) {
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors.role;
-        return newErrors;
-      });
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      // Enviar datos al backend
-      const response = await userService.createUser(form);
-      console.log("Usuario creado:", response);
-
-      present({
-        message: "Usuario registrado exitosamente",
-        duration: 3000,
-        position: "top",
-        color: "success",
-      });
-
-      setSuccess(true);
-    } catch (err: any) {
-      console.error("Error al registrar usuario:", err);
-      setError(err.message || "Error al registrar el usuario");
-      present({
-        message: err.message || "Error al registrar el usuario",
-        duration: 5000,
-        position: "top",
-        color: "danger",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    if (!dateString) return "Seleccione fecha de nacimiento";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
+  if (isLoading) {
+    return <IonLoading isOpen={true} message="Cargando datos..." />;
+  }
 
   return (
     <IonPage>
-      <CustomHeader
-        pageName="Registro de Usuario"
-        showMenuButton={true}
-        showLogoutButton={true}
-      />
-
       <IonContent className="ion-padding">
-        <form onSubmit={handleSubmit} className="user-form">
-          <h2 className="form-title">Registro de Usuarios</h2>
-
-          {error && <div className="error-message">{error}</div>}
+        <form className="user-form">
+          <h2
+            className="form-title"
+            style={{ color: "blue", textAlign: "center" }}
+          >
+            {id ? "Editar Usuario" : "Nuevo Usuario"}
+          </h2>
 
           {/* Tipo de Documento */}
-          <IonItem className="custom-item">
-            <IonIcon
-              icon={documentTextOutline}
-              slot="start"
-              className="custom-icon"
-            />
-            <IonLabel>Tipo de Documento*</IonLabel>
-          </IonItem>
-          <IonSelect
-            value={form.tipo_documento}
-            placeholder="Seleccione el tipo de documento"
-            onIonChange={(e) =>
-              handleInputChange("tipo_documento", e.detail.value)
-            }
-            className="custom-select"
-            interface="popover"
-          >
-            {documentTypes.map((type) => (
-              <IonSelectOption key={type.value} value={type.value}>
-                {type.label}
+          <IonItem className="custom-item" lines="full">
+            <IonIcon icon={cardOutline} slot="start" className="custom-icon" />
+            <IonLabel position="stacked">Tipo de Documento</IonLabel>
+            <IonSelect
+              value={formik.values.documentType}
+              onIonChange={(e) =>
+                formik.setFieldValue("documentType", e.detail.value)
+              }
+              placeholder="Seleccione tipo"
+            >
+              <IonSelectOption value="cc">Cédula de Ciudadanía</IonSelectOption>
+              <IonSelectOption value="ti">Tarjeta de Identidad</IonSelectOption>
+              <IonSelectOption value="ce">
+                Cédula de Extranjería
               </IonSelectOption>
-            ))}
-          </IonSelect>
-          {errors.tipo_documento && (
-            <IonText className="error">{errors.tipo_documento}</IonText>
+              <IonSelectOption value="passport">Pasaporte</IonSelectOption>
+              <IonSelectOption value="nit">NIT</IonSelectOption>
+            </IonSelect>
+          </IonItem>
+          {formik.errors.documentType && (
+            <IonText color="danger" className="ion-padding-start">
+              <small>{formik.errors.documentType}</small>
+            </IonText>
           )}
 
           {/* Número de Documento */}
           <IonItem className="custom-item">
-            <IonIcon
-              icon={documentTextOutline}
-              slot="start"
-              className="custom-icon"
+            <IonIcon icon={cardOutline} slot="start" className="custom-icon" />
+            <IonLabel position="stacked">Número de Documento</IonLabel>
+            <IonInput
+              value={formik.values.documentNumber}
+              onIonChange={(e) =>
+                formik.setFieldValue("documentNumber", e.detail.value)
+              }
+              placeholder="Ingrese el número"
             />
-            <IonLabel>Número de Documento*</IonLabel>
           </IonItem>
-          <IonInput
-            value={form.numero_documento}
-            onIonChange={(e) =>
-              handleInputChange("numero_documento", e.detail.value!)
-            }
-            className="custom-input"
-            placeholder="Ingrese el número de documento"
-          />
-          {errors.numero_documento && (
-            <IonText className="error">{errors.numero_documento}</IonText>
+          {formik.errors.documentNumber && (
+            <IonText color="danger" className="ion-padding-start">
+              <small>{formik.errors.documentNumber}</small>
+            </IonText>
           )}
 
           {/* Nombre Completo */}
@@ -311,105 +195,98 @@ const UserForm: React.FC = () => {
               slot="start"
               className="custom-icon"
             />
-            <IonLabel>Nombre Completo*</IonLabel>
+            <IonLabel position="stacked">Nombre Completo</IonLabel>
+            <IonInput
+              value={formik.values.fullName}
+              onIonChange={(e) =>
+                formik.setFieldValue("fullName", e.detail.value)
+              }
+              placeholder="Ingrese el nombre"
+            />
           </IonItem>
-          <IonInput
-            value={form.nombre}
-            onIonChange={(e) => handleInputChange("nombre", e.detail.value!)}
-            className="custom-input"
-            placeholder="Ingrese el nombre completo"
-          />
-          {errors.nombre && (
-            <IonText className="error">{errors.nombre}</IonText>
+          {formik.errors.fullName && (
+            <IonText color="danger" className="ion-padding-start">
+              <small>{formik.errors.fullName}</small>
+            </IonText>
           )}
 
           {/* Dirección */}
           <IonItem className="custom-item">
             <IonIcon icon={homeOutline} slot="start" className="custom-icon" />
-            <IonLabel>Dirección*</IonLabel>
+            <IonLabel position="stacked">Dirección</IonLabel>
+            <IonInput
+              value={formik.values.address}
+              onIonChange={(e) =>
+                formik.setFieldValue("address", e.detail.value)
+              }
+              placeholder="Ingrese la dirección"
+            />
           </IonItem>
-          <IonInput
-            value={form.direccion}
-            onIonChange={(e) => handleInputChange("direccion", e.detail.value!)}
-            className="custom-input"
-            placeholder="Ingrese la dirección"
-          />
-          {errors.direccion && (
-            <IonText className="error">{errors.direccion}</IonText>
+          {formik.errors.address && (
+            <IonText color="danger" className="ion-padding-start">
+              <small>{formik.errors.address}</small>
+            </IonText>
           )}
 
           {/* Teléfono */}
           <IonItem className="custom-item">
             <IonIcon icon={callOutline} slot="start" className="custom-icon" />
-            <IonLabel>Teléfono*</IonLabel>
+            <IonLabel position="stacked">Teléfono</IonLabel>
+            <IonInput
+              type="tel"
+              value={formik.values.phone}
+              onIonChange={(e) => formik.setFieldValue("phone", e.detail.value)}
+              placeholder="Ingrese el teléfono"
+            />
           </IonItem>
-          <IonInput
-            type="tel"
-            value={form.telefono}
-            onIonChange={(e) => handleInputChange("telefono", e.detail.value!)}
-            className="custom-input"
-            placeholder="Ingrese el número de teléfono"
-          />
-          {errors.telefono && (
-            <IonText className="error">{errors.telefono}</IonText>
+          {formik.errors.phone && (
+            <IonText color="danger" className="ion-padding-start">
+              <small>{formik.errors.phone}</small>
+            </IonText>
           )}
 
           {/* Email */}
           <IonItem className="custom-item">
             <IonIcon icon={mailOutline} slot="start" className="custom-icon" />
-            <IonLabel>Correo Electrónico*</IonLabel>
+            <IonLabel position="stacked">Correo Electrónico</IonLabel>
+            <IonInput
+              type="email"
+              value={formik.values.email}
+              onIonChange={(e) => formik.setFieldValue("email", e.detail.value)}
+              placeholder="Ingrese el email"
+            />
           </IonItem>
-          <IonInput
-            type="email"
-            value={form.email}
-            onIonChange={(e) => handleInputChange("email", e.detail.value!)}
-            className="custom-input"
-            placeholder="Ingrese el correo electrónico"
-          />
-          {errors.email && <IonText className="error">{errors.email}</IonText>}
+          {formik.errors.email && (
+            <IonText color="danger" className="ion-padding-start">
+              <small>{formik.errors.email}</small>
+            </IonText>
+          )}
 
           {/* Fecha de Nacimiento */}
-          <IonItem className="custom-item">
+          <IonItem
+            className="custom-item"
+            button
+            onClick={() => setShowDatePicker(true)}
+          >
             <IonIcon
               icon={calendarOutline}
               slot="start"
               className="custom-icon"
             />
-            <IonLabel>Fecha de Nacimiento*</IonLabel>
+            <IonLabel>Fecha de Nacimiento</IonLabel>
+            <IonLabel
+              slot="end"
+              color={formik.values.birthDate ? undefined : "medium"}
+            >
+              {formik.values.birthDate
+                ? new Date(formik.values.birthDate).toLocaleDateString("es-ES")
+                : "Seleccione fecha"}
+            </IonLabel>
           </IonItem>
-          <IonItem
-            button
-            onClick={() => setShowDatePicker(true)}
-            className="custom-input"
-            lines="none"
-          >
-            <IonLabel>{formatDate(form.birthDate)}</IonLabel>
-          </IonItem>
-          {errors.birthDate && (
-            <IonText className="error">{errors.birthDate}</IonText>
-          )}
-          {showDatePicker && (
-            <div className="datetime-modal-backdrop">
-              <div className="datetime-modal-content">
-                <IonDatetime
-                  presentation="date"
-                  onIonChange={(e) => {
-                    handleInputChange("birthDate", e.detail.value as string);
-                    setShowDatePicker(false);
-                  }}
-                  max={new Date().toISOString()}
-                  locale="es-ES"
-                />
-                <div className="datetime-actions">
-                  <IonButton
-                    size="small"
-                    onClick={() => setShowDatePicker(false)}
-                  >
-                    Cancelar
-                  </IonButton>
-                </div>
-              </div>
-            </div>
+          {formik.errors.birthDate && (
+            <IonText color="danger" className="ion-padding-start">
+              <small>{formik.errors.birthDate}</small>
+            </IonText>
           )}
 
           {/* Tipo de Contribuyente */}
@@ -419,133 +296,166 @@ const UserForm: React.FC = () => {
               slot="start"
               className="custom-icon"
             />
-            <IonLabel>Tipo de Contribuyente*</IonLabel>
+            <IonLabel position="stacked">Tipo de Contribuyente</IonLabel>
+            <IonSelect
+              value={formik.values.taxpayerType}
+              onIonChange={(e) =>
+                formik.setFieldValue("taxpayerType", e.detail.value)
+              }
+              placeholder="Seleccione tipo"
+            >
+              <IonSelectOption value="NATURAL">Natural</IonSelectOption>
+              <IonSelectOption value="JURIDICA">Juridica</IonSelectOption>
+            </IonSelect>
           </IonItem>
-          <IonSelect
-            value={form.tipocontribuyente}
-            onIonChange={(e) =>
-              handleInputChange("tipocontribuyente", e.detail.value)
-            }
-            className="custom-select"
-            interface="popover"
-          >
-            {contributorTypes.map((type) => (
-              <IonSelectOption key={type.value} value={type.value}>
-                {type.label}
-              </IonSelectOption>
-            ))}
-          </IonSelect>
+          {formik.errors.taxpayerType && (
+            <IonText color="danger" className="ion-padding-start">
+              <small>{formik.errors.taxpayerType}</small>
+            </IonText>
+          )}
 
           {/* Tipo de Actividad */}
           <IonItem className="custom-item">
             <IonIcon
-              icon={briefcaseOutline}
+              icon={settingsOutline}
               slot="start"
               className="custom-icon"
             />
-            <IonLabel>Tipo de Actividad*</IonLabel>
-          </IonItem>
-          <IonSelect
-            value={form.tipo_actividad}
-            onIonChange={(e) =>
-              handleInputChange("tipo_actividad", e.detail.value)
-            }
-            className="custom-select"
-            interface="popover"
-          >
-            {activityTypes.map((type) => (
-              <IonSelectOption key={type.value} value={type.value}>
-                {type.label}
-              </IonSelectOption>
-            ))}
-          </IonSelect>
-
-          {/* Contraseña */}
-          <IonItem className="custom-item">
-            <IonIcon
-              icon={lockClosedOutline}
-              slot="start"
-              className="custom-icon"
-            />
-            <IonLabel>Contraseña*</IonLabel>
-          </IonItem>
-          <div className="input-icon-container">
+            <IonLabel position="stacked">Tipo de Actividad</IonLabel>
             <IonInput
-              type={showPassword ? "text" : "password"}
-              value={form.password}
+              value={formik.values.activityType}
               onIonChange={(e) =>
-                handleInputChange("password", e.detail.value!)
+                formik.setFieldValue("activityType", e.detail.value)
               }
-              className="custom-input"
-              placeholder="Ingrese la contraseña"
+              placeholder="Ingrese la actividad"
             />
-            <IonIcon
-              icon={showPassword ? eyeOff : eye}
-              className="password-toggle-icon"
-              onClick={() => setShowPassword(!showPassword)}
-            />
-          </div>
-          {errors.password && (
-            <IonText className="error">{errors.password}</IonText>
+          </IonItem>
+          {formik.errors.activityType && (
+            <IonText color="danger" className="ion-padding-start">
+              <small>{formik.errors.activityType}</small>
+            </IonText>
           )}
 
-          {/* Rol */}
+          {/* Solo mostrar campo de contraseña en creación */}
+          {!id && (
+            <>
+              <IonItem className="custom-item">
+                <IonIcon
+                  icon={lockClosedOutline}
+                  slot="start"
+                  className="custom-icon"
+                />
+                <IonLabel position="stacked">Contraseña</IonLabel>
+                <IonInput
+                  type={showPassword ? "text" : "password"}
+                  value={formik.values.password}
+                  onIonChange={(e) =>
+                    formik.setFieldValue("password", e.detail.value)
+                  }
+                  placeholder="Ingrese la contraseña"
+                />
+                <IonIcon
+                  slot="end"
+                  icon={showPassword ? eyeOffOutline : eyeOutline}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  style={{ cursor: "pointer", marginLeft: "8px" }}
+                />
+              </IonItem>
+              {formik.errors.password && (
+                <IonText color="danger" className="ion-padding-start">
+                  <small>{formik.errors.password}</small>
+                </IonText>
+              )}
+            </>
+          )}
+
+          {/* Rol (asumiendo que tienes roles en tu sistema) */}
           <IonItem className="custom-item">
             <IonIcon
-              icon={informationCircleOutline}
+              icon={personOutline}
               slot="start"
               className="custom-icon"
             />
-            <IonLabel>Rol*</IonLabel>
+            <IonLabel position="stacked">Rol</IonLabel>
+            <IonSelect
+              value={formik.values.roleId}
+              onIonChange={(e) =>
+                formik.setFieldValue("roleId", e.detail.value)
+              }
+              placeholder="Seleccione rol"
+            >
+              <IonSelectOption value="1">Super Admin</IonSelectOption>
+              <IonSelectOption value="2">Entidad Pública</IonSelectOption>
+              <IonSelectOption value="3">Contribuyente</IonSelectOption>
+            </IonSelect>
           </IonItem>
-          <IonSelect
-            value={form.role.id}
-            onIonChange={(e) => handleRoleChange(e.detail.value)}
-            className="custom-select"
-            interface="popover"
-          >
-            {roles.map((role) => (
-              <IonSelectOption key={role.id} value={role.id}>
-                {role.label}
-              </IonSelectOption>
-            ))}
-          </IonSelect>
-          {errors.role && <IonText className="error">{errors.role}</IonText>}
+          {formik.errors.roleId && (
+            <IonText color="danger" className="ion-padding-start">
+              <small>{formik.errors.roleId}</small>
+            </IonText>
+          )}
 
-          <div className="form-actions">
+          {/* Mensaje de error general */}
+          {errorMessage && (
+            <IonText color="danger" className="ion-padding">
+              <p>{errorMessage}</p>
+            </IonText>
+          )}
+
+          {/* Botones de acción */}
+          <div className="button-row">
             <IonButton
+              expand="block"
               fill="outline"
               onClick={() => history.goBack()}
-              className="cancel-button"
+              disabled={isSubmitting}
             >
+              <IonIcon icon={arrowBackOutline} slot="start" />
               Cancelar
             </IonButton>
 
             <IonButton
-              type="submit"
-              disabled={loading}
-              className="submit-button"
+              expand="block"
+              onClick={async () => {
+                await formik.handleSubmit();
+                // Si no hay errores y no está enviando, redirige
+                if (Object.keys(formik.errors).length === 0 && !isSubmitting) {
+                  history.push("/verify-email"); // Cambia "/users" por la ruta deseada
+                }
+              }}
+              disabled={isSubmitting}
             >
-              {loading ? "Registrando..." : "Registrarse"}
+              <IonIcon icon={saveOutline} slot="start" />
+              {isSubmitting ? "Guardando..." : "Guardar"}
             </IonButton>
           </div>
         </form>
+
+        {/* Modal para fecha de nacimiento */}
+        <IonModal
+          isOpen={showDatePicker}
+          onDidDismiss={() => setShowDatePicker(false)}
+        >
+          <IonContent>
+            <IonDatetime
+              presentation="date"
+              locale="es-ES"
+              min="1900-01-01"
+              max={new Date().toISOString()}
+              value={formik.values.birthDate || undefined}
+              onIonChange={(e) => handleDateConfirm(e.detail.value as string)}
+            />
+            <IonButtons className="ion-padding">
+              <IonButton onClick={() => setShowDatePicker(false)}>
+                Cerrar
+              </IonButton>
+              <IonButton onClick={() => setShowDatePicker(false)}>
+                Aceptar
+              </IonButton>
+            </IonButtons>
+          </IonContent>
+        </IonModal>
       </IonContent>
-
-      <IonAlert
-        isOpen={success}
-        onDidDismiss={() => {
-          setSuccess(false);
-          history.push("/login");
-        }}
-        header="Registro Exitoso"
-        message="Su cuenta ha sido creada correctamente. Ahora puede iniciar sesión."
-        buttons={["OK"]}
-      />
-
-      <IonLoading isOpen={loading} message="Procesando..." spinner="circles" />
     </IonPage>
   );
-};
-
-export default UserForm;
+}

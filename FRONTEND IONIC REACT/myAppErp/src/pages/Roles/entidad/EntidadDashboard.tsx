@@ -1,6 +1,6 @@
 // src/pages/entidad/EntidadDashboard.tsx
-import { IonContent, IonPage } from '@ionic/react';
-import CustomHeader from '../../components/CustomHeader/CustomHeader';
+import { IonContent, IonPage } from "@ionic/react";
+import CustomHeader from "../../../components/CustomHeader/CustomHeader";
 
 const EntidadDashboard = () => {
   return (

@@ -1,6 +1,6 @@
 // src/pages/admin/AdminDashboard.tsx
-import { IonContent, IonPage } from '@ionic/react';
-import CustomHeader from '../../components/CustomHeader/CustomHeader';
+import { IonContent, IonPage } from "@ionic/react";
+import CustomHeader from "../../../components/CustomHeader/CustomHeader";
 
 const AdminDashboard = () => {
   return (

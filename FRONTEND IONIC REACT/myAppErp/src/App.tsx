@@ -20,16 +20,17 @@ import "@ionic/react/css/palettes/dark.system.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import Login from "./pages/auth/Login/Login";
 import InvoiceGenerator from "./pages/Invoicing/InvoiceGenerator";
-import UserForm from "./pages/Registration/Usuarios/UserForm";
+
 import HomeScreen from "./pages/inicio/HomeScreen";
-import VerifyEmail from "./pages/auth/VerifyEmail/VerifyEmail";
-import { TipoTributoPage } from "./pages/Registration/TipoTributo/TipoTributoPage";
+import AdminDashboard from "./pages/Roles/admin/AdminDashboard";
+import EntidadDashboard from "./pages/Roles/entidad/EntidadDashboard";
+import { UserForm } from "./pages/Registration/Usuarios/UserForm";
+import { TipoTributoForm } from "./pages/Registration/TipoTributo/TipoTributoForm";
+import ContribuyenteDashboard from "./pages/Roles/contribuyente/ContribuyenteDashboard";
 import RoleRedirector from "./components/RoleRedirector";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import EntidadDashboard from "./pages/entidad/EntidadDashboard";
-import ContribuyenteDashboard from "./pages/contribuyente/ContribuyenteDashboard";
+import VerifyEmail from "./pages/auth/VerifyEmail/VerifyEmail";
+import Login from "./pages/auth/Login/Login";
 
 setupIonicReact();
 
@@ -42,18 +43,7 @@ const App: React.FC = () => (
           <RoleRedirector />
         </Route>
 
-        {/* Rutas públicas (sin menú) */}
-        <Route exact path="/login">
-          <AuthLayout pageName="Iniciar Sesión">
-            <Login />
-          </AuthLayout>
-        </Route>
-
-        <Route exact path="/verify-email">
-          <AuthLayout pageName="Verificación de Email">
-            <VerifyEmail />
-          </AuthLayout>
-        </Route>
+        {/*        Rutas públicas con menú        */}
 
         {/* Dashboards por rol */}
         <Route exact path="/admin">
@@ -74,7 +64,6 @@ const App: React.FC = () => (
           </MainLayout>
         </Route>
 
-        {/* Rutas existentes */}
         <Route exact path="/factura">
           <MainLayout pageName="Generador de Factura">
             <InvoiceGenerator />
@@ -83,13 +72,7 @@ const App: React.FC = () => (
 
         <Route exact path="/tipo-tributo">
           <MainLayout pageName="Tipo de Tributo">
-            <TipoTributoPage />
-          </MainLayout>
-        </Route>
-
-        <Route exact path="/registro-usuario">
-          <MainLayout pageName="Registro de Usuario">
-            <UserForm />
+            <TipoTributoForm />
           </MainLayout>
         </Route>
 
@@ -99,8 +82,28 @@ const App: React.FC = () => (
           </MainLayout>
         </Route>
 
+        {/*        Rutas públicas (sin menú)        */}
+
+        <Route exact path="/registro-usuario">
+          <AuthLayout pageName="Registro de Usuario">
+            <UserForm />
+          </AuthLayout>
+        </Route>
+
+        <Route exact path="/verify-email">
+          <AuthLayout pageName="Verificación de Email">
+            <VerifyEmail />
+          </AuthLayout>
+        </Route>
+
+        <Route exact path="/login">
+          <AuthLayout pageName="Iniciar Sesión">
+            <Login />
+          </AuthLayout>
+        </Route>
+
         {/* Redirección por defecto */}
-        <Redirect to="/" />
+        <Redirect to="/login" />
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>

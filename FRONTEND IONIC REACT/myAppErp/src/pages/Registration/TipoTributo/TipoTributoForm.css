@@ -1,5 +1,5 @@
 /* src/components/auth/UserForm.css */
-.user-form {
+.tipo-tributo-form {
   max-width: 600px;
   margin: 20px auto;
   padding: 20px;
@@ -8,13 +8,7 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilo para el h2 dentro del formulario */
-.user-form h2 {
-  text-align: center;
-  margin-bottom: 25px;
-  color: #1a73e8;
-  font-weight: 600;
-}
+
 
 .error-message {
   color: var(--ion-color-danger);

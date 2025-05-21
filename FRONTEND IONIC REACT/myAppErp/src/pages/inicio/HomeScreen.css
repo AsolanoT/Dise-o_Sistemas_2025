@@ -1,7 +1,22 @@
+.quick-actions ion-button {
+  --background: #1976d2;
+  --color: white;
+  --border-radius: 8px;
+  --box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
+  --background-hover: #1565c0;
+  --background-activated: #0d47a1;
+  --padding-top: 12px; /* Aumento moderado del padding vertical */
+  --padding-bottom: 12px;
+  margin: 0.5rem 0;
+  font-size: 1.05rem;
+}
+
 .welcome-section {
   text-align: center;
   margin-bottom: 2rem;
 }
+
+
 
 .welcome-section h1 {
   font-size: 1.8rem;
@@ -37,3 +52,4 @@
   flex-direction: column;
   gap: 1rem;
 }
+

@@ -12,7 +12,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { eye, eyeOff, mailOutline, lockClosedOutline } from "ionicons/icons";
 import "./Login.css";
-import { authService } from "../../../services/auth.service";
+import { authService } from "../../../services/role.service";
 
 const Login: React.FC = () => {
   const history = useHistory();
@@ -71,14 +71,28 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      await authService.login(
+      // Usamos el servicio de autenticación
+      const user = await authService.login(
         formData.email.toLowerCase().trim(),
         formData.password
       );
 
-      // La redirección la manejará RoleRedirector o algún otro componente según el rol
-      // Aquí podrías redirigir a una ruta genérica si se desea, por ejemplo:
-      // history.push("/redirector");
+      // Mostramos mensaje de éxito
+      present({
+        message: `Bienvenido ${user.email}`,
+        duration: 2000,
+        position: "top",
+        color: "success",
+      });
+
+      // Redirigimos según el rol del usuario
+      if (user.role.nombre === "Administrador") {
+        history.push("/admin/dashboard");
+      } else if (user.role.nombre === "Contribuyente") {
+        history.push("/contribuyente/dashboard");
+      } else {
+        history.push("/dashboard");
+      }
     } catch (error: any) {
       console.error("Error en login:", error);
       setErrors((prev) => ({
@@ -118,7 +132,7 @@ const Login: React.FC = () => {
             <div className="input-group">
               <IonIcon icon={mailOutline} className="input-icon" />
               <IonInput
-                className={`neumorphic-input placeholder-black ${
+                className={`neumorphic-input ${
                   errors.email ? "input-error" : ""
                 }`}
                 placeholder="Correo electrónico"

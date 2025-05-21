@@ -14,7 +14,6 @@ import {
   IonIcon,
   IonButton,
 } from "@ionic/react";
-import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import {
   documentTextOutline,
@@ -85,10 +84,20 @@ const HomeScreen: React.FC = () => {
       />
 
       <IonContent fullscreen className="ion-padding">
-        <div className="welcome-section">
-          <h1>Bienvenido al Sistema</h1>
-          <p>Gestión integral de procesos tributarios</p>
-        </div>
+        {/* Contenedor oscuro para el mensaje de bienvenida */}
+        <IonCard
+          className="welcome-card"
+          style={{ backgroundColor: "#375261", color: "#fff" }}
+        >
+          <IonCardHeader>
+            <IonCardTitle className="welcome-title">
+              Bienvenido al Sistema
+            </IonCardTitle>
+            <IonCardSubtitle className="welcome-subtitle">
+              Gestión integral de procesos tributarios
+            </IonCardSubtitle>
+          </IonCardHeader>
+        </IonCard>
 
         <IonGrid>
           <IonRow>

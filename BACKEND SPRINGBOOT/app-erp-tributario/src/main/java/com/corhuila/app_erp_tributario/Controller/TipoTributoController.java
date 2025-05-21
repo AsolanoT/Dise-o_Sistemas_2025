@@ -9,7 +9,7 @@ import com.corhuila.app_erp_tributario.IService.ITipoTributoService;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/tipotributo")
+@RequestMapping("/api/tipo-tributo")
 public class TipoTributoController extends ABaseController<TipoTributo, ITipoTributoService> {
 
     public TipoTributoController(ITipoTributoService service) {

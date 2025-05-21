@@ -11,8 +11,7 @@ import {
 import { useHistory, useLocation } from "react-router-dom";
 import { mailOutline } from "ionicons/icons";
 import "./VerifyEmail.css";
-import verifyEmail from "../../../services/userService";
-
+import { verifyEmail } from "../../../services/auth.service";
 import { useState } from "react";
 
 type LocationState = {
@@ -25,7 +24,6 @@ const VerifyEmail: React.FC = () => {
   const [present] = useIonToast();
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
-  const [resendLoading, setResendLoading] = useState(false);
 
   const email = (location.state as LocationState)?.email || "";
 
@@ -53,14 +51,19 @@ const VerifyEmail: React.FC = () => {
 
     setLoading(true);
     try {
-      await verifyEmail.verifyEmail(email, code);
-      present({
-        message: "¡Correo verificado exitosamente!",
-        duration: 3000,
-        position: "top",
-        color: "success",
-      });
-      history.push("/login");
+      const response = await verifyEmail(email, code);
+
+      if (response && response.status) {
+        present({
+          message: "¡Correo verificado exitosamente!",
+          duration: 3000,
+          position: "top",
+          color: "success",
+        });
+        history.push("/login");
+      } else {
+        throw new Error(response?.message || "Código de verificación inválido");
+      }
     } catch (error: any) {
       present({
         message: error.message || "Error al verificar el correo",
@@ -70,29 +73,6 @@ const VerifyEmail: React.FC = () => {
       });
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleResendCode = async () => {
-    setResendLoading(true);
-    try {
-      // Aquí implementarías la función para reenviar el código
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulación
-      present({
-        message: "Código reenviado exitosamente",
-        duration: 3000,
-        position: "top",
-        color: "success",
-      });
-    } catch (error) {
-      present({
-        message: "Error al reenviar el código",
-        duration: 3000,
-        position: "top",
-        color: "danger",
-      });
-    } finally {
-      setResendLoading(false);
     }
   };
 
@@ -138,29 +118,10 @@ const VerifyEmail: React.FC = () => {
             >
               {loading ? "Verificando..." : "Verificar"}
             </IonButton>
-
-            <IonButton
-              className="neumorphic-button"
-              expand="block"
-              fill="outline"
-              onClick={handleResendCode}
-              disabled={resendLoading || !email}
-            >
-              {resendLoading ? "Enviando..." : "Reenviar código"}
-            </IonButton>
-
-            <IonButton
-              className="neumorphic-button"
-              expand="block"
-              fill="clear"
-              onClick={() => history.push("/register")}
-            >
-              Volver al registro
-            </IonButton>
           </div>
         </div>
 
-        <IonLoading isOpen={loading || resendLoading} message="Procesando..." />
+        <IonLoading isOpen={loading} message="Procesando..." />
       </IonContent>
     </IonPage>
   );
