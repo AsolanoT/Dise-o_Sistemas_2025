@@ -17,9 +17,11 @@ import com.corhuila.app_erp_tributario.DTO.UserDto;
 import com.corhuila.app_erp_tributario.Entity.User;
 import com.corhuila.app_erp_tributario.IService.IUserService;
 import com.corhuila.app_erp_tributario.Service.AuthService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import org.springframework.security.core.Authentication;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController extends ABaseController<User, IUserService> {

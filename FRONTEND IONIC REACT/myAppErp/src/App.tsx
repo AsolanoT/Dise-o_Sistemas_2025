@@ -20,7 +20,6 @@ import "@ionic/react/css/palettes/dark.system.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import InvoiceGenerator from "./pages/Invoicing/InvoiceGenerator";
 
 import HomeScreen from "./pages/inicio/HomeScreen";
 import AdminDashboard from "./pages/Roles/admin/AdminDashboard";
@@ -31,6 +30,7 @@ import ContribuyenteDashboard from "./pages/Roles/contribuyente/ContribuyenteDas
 import RoleRedirector from "./components/RoleRedirector";
 import VerifyEmail from "./pages/auth/VerifyEmail/VerifyEmail";
 import Login from "./pages/auth/Login/Login";
+import FacturaForm from "./pages/factura/FacturaForm";
 
 setupIonicReact();
 
@@ -65,8 +65,8 @@ const App: React.FC = () => (
         </Route>
 
         <Route exact path="/factura">
-          <MainLayout pageName="Generador de Factura">
-            <InvoiceGenerator />
+          <MainLayout pageName="Registro de Factura">
+            <FacturaForm />
           </MainLayout>
         </Route>
 

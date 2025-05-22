@@ -12,7 +12,7 @@ export interface TipoTributo {
 export const fetchTiposTributo = async (): Promise<TipoTributo[]> => {
   try {
     const response = await api.get<TipoTributo[]>('/tipo-tributo');
-    return response.data.filter((item: TipoTributo) => item.status === true);
+    return response.data.filter((res: TipoTributo) => res.status === true);
   } catch (error) {
     console.error('Error fetching tipos de tributo:', error);
     throw error;

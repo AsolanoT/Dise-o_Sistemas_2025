@@ -1,0 +1,230 @@
+
+
+
+Te presento a continuación el contexto del proyecto de forma resumida, precisa y organizada tal como él lo explicó, sin añadir características adicionales.
+
+📘 PROYECTO: ERP TRIBUTARIO (Versión educativa simplificada)
+
+🎯 Objetivo:
+Desarrollar un sistema básico ERP tributario que permita la gestión de usuarios, tributos y facturas. El sistema debe contemplar 3 roles definidos y funcionalidades asociadas a cada uno.
+
+🔐 Roles del Sistema:
+
+1. SuperAdmin
+
+   * Accede a todo el sistema sin restricciones.
+
+2. Entidad Pública (por ejemplo: Alcaldía)
+
+   * Genera la factura para el contribuyente, incluyendo:
+
+     * Datos del contribuyente
+     * Tipo de tributo
+     * Valor
+     * Estado de la factura: Activa (A) o Cancelada (C)
+   * Puede consultar todas las facturas y cambiar su estado.
+
+3. Contribuyente
+
+   * Puede ser persona natural o persona jurídica.
+   * Tiene las siguientes funcionalidades:
+
+     * Registro (con selección de rol)
+     * Login (usuario y contraseña)
+     * Visualización de sus facturas (tipo de tributo, valor, estado)
+     * Actualización de sus datos y actividades tributarias
+
+📄 Funcionalidades clave (según lo indicado por el profesor):
+
+* Registro de usuario con los siguientes campos:
+
+  * Nombre
+  * Identificación (tipo y número)
+  * Dirección
+  * Tipo de tributo asociado (multas, movilidad, predial, industria y comercio)
+  * Rol (se selecciona al registrarse)
+
+* Edición y actualización de usuario
+
+* Login con usuario y contraseña
+
+* Generación de factura por parte de la entidad pública con los campos:
+
+  * Rol del contribuyente
+  * Tipo de tributo
+  * Valor
+  * Estado: A (Activa) o C (Cancelada)
+
+* Visualización de factura:
+
+  * El contribuyente ve su(s) factura(s)
+  * La entidad puede ver todas las facturas y cambiar su estado
+
+📌 Importante:
+
+* La entidad pública es quien genera y gestiona el estado de la factura (puede marcarla como cancelada o dejarla activa).
+* El contribuyente no puede cancelar facturas; solo puede verlas y actualizar sus datos.
+* El sistema solo maneja lo estrictamente necesario: registro, edición, login, generación y visualización de facturas.
+
+🗃️ Datos esenciales del sistema:
+
+Usuario
+
+* idUsuario
+* nombre
+* tipoIdentificación (CC, NIT, etc.)
+* númeroIdentificación
+* dirección
+* tipoContribuyente (persona natural / jurídica)
+* usuario
+* contraseña
+* rol (superAdmin / entidad / contribuyente)
+
+Factura
+
+* idFactura
+* idUsuario (FK al contribuyente)
+* tipoTributo (multas, movilidad, predial, etc.)
+* valor
+* estado (A / C)
+* generadaPor (FK a entidad pública)
+
+✔️ Con esto ya tienes el contexto esencial, limpio y enfocado. ¿Te gustaría ahora que lo pasemos a formato de diagrama entidad-relación, o deseas primero que hagamos los casos de uso o requerimientos funcionales según esto?
+
+	CREACION ED ROLES
+{
+  "status": true,
+  "nombre": "Entidad Pública"
+},
+{
+  "status": true,
+  "nombre": "Contribuyente"
+},
+{
+  "status": true,
+  "nombre": "SuperAdmin"
+}
+-----------------------
+	REGISTRO DE USUARIOS:
+{
+  "status": true,
+  "tipo_documento": "CEDULA",
+  "numero_documento": "1076501633",
+  "nombre": "Angel Gustavo Solano Trujillo ",
+  "direccion": "CALLE 16 15-16",
+  "telefono": "3002286906",
+  "email": "trujilloangel125@gmail.com",
+  "birthDate": "2005-01-12",
+  "password": "Leo1234@",
+  "tipocontribuyente": "NATURAL",
+  "tipo_actividad": "EMPLEADO",
+  "role": {
+    "id": "3"
+  }
+}
+-----------------------
+	LOGIN:
+{
+  "email": "trujilloangel125@gmail.com",
+  "password": "Leo1234@"
+}
+-----------------------
+	REGSITRO DE TIPO DE TRIBUTOS
+La base de cálculo es fundamental en el cálculo de impuestos porque determina sobre qué monto se aplica la tarifa tributaria. Es como la base sobre la cual se calcula cuánto debes pagar.
+Por ejemplo:
+- Si una persona tiene ingresos anuales de $72.000.000 COP, ese monto es la base de cálculo para el Impuesto de Renta.
+- Si una empresa vende productos por $10.000.000 COP, esa cifra es la base de cálculo para el IVA.
+- Si una persona posee un inmueble valorado en $250.000.000 COP, ese es el valor base sobre el que se cobra el Impuesto Predial.
+La base de cálculo varía dependiendo del tipo de tributo y la actividad económica del contribuyente. Es el punto de partida para determinar cuánto impuesto debe pagarse.
+
+Exactamente. En la tabla de tipo de tributo, la base de cálculo no debería ser un valor fijo, porque depende de cada contribuyente y su situación específica.
+En lugar de un número estático, podrías incluir una descripción general de cómo se calcula la base para cada tipo de impuesto. Por ejemplo:
+- Para el IVA, la base de cálculo es el valor de venta de bienes y servicios.
+- Para el Impuesto de Renta, es el ingreso neto anual de la persona o empresa.
+- Para el Impuesto Predial, es el avalúo catastral del inmueble.
+- Para el ICA, es el total de ingresos brutos generados por la actividad comercial.
+Así, cuando el sistema procese los datos de un contribuyente, calculará la base de acuerdo con sus valores específicos. ¿Quieres que te ayude a estructurar mejor la tabla para reflejar esto?
+
+
+{
+    "status": true,
+    "nombre": "Impuesto al Valor Agregado (IVA)",
+    "descripcion": "Tributo sobre el consumo aplicado a bienes y servicios.",
+    "tarifa": 0.19,
+    "periodicidad": "Mensual"
+  }
+---------------------------------------
+	CREACION DE FACTURAS
+{
+  "status": true,
+  "user": {
+    "id": 1
+    },
+  "tipoTributo": {
+    "id": 1
+  },
+  "periodo": "2025-04",
+  "baseCalculo": 8000000,
+  "valorEstimado": 1520000, //AUTO
+  "estado": "Pagado",
+  "concepto": "Declaración tributaria del mes de abril",
+  "fechaEmision": "2025-05-19",
+  "fechaVencimiento": "2025-05-31"
+}
+
+
+-----------------------------------------------------------------------
+
+## 1. Usuario (User)
+ Usuario {
+  id_usuario: number;
+  documentType: string; // 'cc', 'ti', 'ce', 'passport', 'nit'
+  documentNumber: string;
+  fullName: string;
+  birthDate: string;
+  email: string;
+  phone: string;
+  password: string;
+  estado: boolean;
+}
+
+
+## 2. Contribuyente
+ Contribuyente {
+  id_contribuyente: number;
+  tipo_documento: string; // 'CC', 'NIT', 'CE'
+  numero_documento: string;
+  nombre_completo: string;
+  direccion: string;
+  telefono: string;
+  correo: string;
+  id_tipo_contribuyente: number;
+  tipo_actividad: string;
+  porcentaje_iva: number;
+}
+
+ TipoContribuyente {
+  id_tipo_contribuyente: number;
+  descripcion: string; // 'Natural', 'Jurídico'
+}
+
+
+## 3. Factura/Tributo 
+ Factura {
+  id_factura: number;
+  id_contribuyente: number;
+  id_tipo_tributo: number;
+  periodo: string; // Formato 'YYYY-MM'
+  valor_estimado: number;
+  estado: string; // 'Pendiente', 'Pagado', 'Vencido'
+  concepto: string;
+}
+
+
+## 4. Tipo de Tributo  TipoTributo {
+  id_tipo_tributo: number;
+  nombre: string;
+  descripcion: string;
+  tarifa: number; 
+  periodicidad: string; // 'Mensual', 'Trimestral', 'Semestral', 'Anual'
+}

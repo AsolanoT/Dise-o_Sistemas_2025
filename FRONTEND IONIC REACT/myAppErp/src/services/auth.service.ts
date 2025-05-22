@@ -208,3 +208,60 @@ export const verifyEmail = async (email: string, code: string) => {
   }
 };
 
+export const fetchUsers = async (): Promise<any[]> => {
+  try {
+    const response = await axios.get(API_URL, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+      },
+      validateStatus: () => true
+    });
+    
+    console.log('Respuesta completa:', response);
+    console.log('Datos recibidos:', response.data);
+    
+    if (!response.data) {
+      throw new Error('La respuesta no contiene datos');
+    }
+
+    // Si la respuesta es un objeto con una propiedad data
+    if (response.data.data && Array.isArray(response.data.data)) {
+      return response.data.data
+        .filter((user: any) => user.status === true)
+        .map((user: any) => ({
+          id: user.id,
+          documentType: user.tipo_documento,
+          documentNumber: user.numero_documento,
+          nombre: user.nombre || user.fullName,
+          email: user.email,
+          phone: user.telefono,
+          role: user.role?.nombre || 'Usuario'
+        }));
+    }
+
+    // Si la respuesta es directamente el array
+    if (Array.isArray(response.data)) {
+      return response.data
+        .filter((user: any) => user.status === true)
+        .map((user: any) => ({
+          id: user.id,
+          documentType: user.tipo_documento,
+          documentNumber: user.numero_documento,
+          nombre: user.nombre || user.fullName,
+          email: user.email,
+          phone: user.telefono,
+          role: user.role?.nombre || 'Usuario'
+        }));
+    }
+
+    throw new Error('Formato de respuesta no reconocido');
+  } catch (error: any) {
+    console.error('Error fetching users:', {
+      error: error.message,
+      response: error.response?.data
+    });
+    throw new Error(error.response?.data?.message || 
+                  'Error al obtener la lista de usuarios');
+  }
+};
+
