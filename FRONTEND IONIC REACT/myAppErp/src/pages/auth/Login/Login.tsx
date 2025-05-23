@@ -8,7 +8,7 @@ import {
   IonIcon,
   useIonToast,
 } from "@ionic/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { eye, eyeOff, mailOutline, lockClosedOutline } from "ionicons/icons";
 import "./Login.css";

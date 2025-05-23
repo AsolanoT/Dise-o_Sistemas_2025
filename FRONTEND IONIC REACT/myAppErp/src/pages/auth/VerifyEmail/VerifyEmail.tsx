@@ -12,18 +12,18 @@ import { useHistory, useLocation } from "react-router-dom";
 import { mailOutline } from "ionicons/icons";
 import "./VerifyEmail.css";
 import { verifyEmail } from "../../../services/auth.service";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type LocationState = {
   email: string;
 };
 
-const VerifyEmail: React.FC = () => {
+export function VerifyEmail() {
   const location = useLocation();
   const history = useHistory();
   const [present] = useIonToast();
   const [code, setCode] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const email = (location.state as LocationState)?.email || "";
 
@@ -45,25 +45,20 @@ const VerifyEmail: React.FC = () => {
         position: "top",
         color: "danger",
       });
-      history.push("/register");
+      history.push("/signup");
       return;
     }
 
-    setLoading(true);
+    setIsSubmitting(true);
     try {
-      const response = await verifyEmail(email, code);
-
-      if (response && response.status) {
-        present({
-          message: "¡Correo verificado exitosamente!",
-          duration: 3000,
-          position: "top",
-          color: "success",
-        });
-        history.push("/login");
-      } else {
-        throw new Error(response?.message || "Código de verificación inválido");
-      }
+      await verifyEmail(email, code);
+      present({
+        message: "¡Correo verificado exitosamente!",
+        duration: 3000,
+        position: "top",
+        color: "success",
+      });
+      history.push("/login");
     } catch (error: any) {
       present({
         message: error.message || "Error al verificar el correo",
@@ -72,7 +67,7 @@ const VerifyEmail: React.FC = () => {
         color: "danger",
       });
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -111,20 +106,17 @@ const VerifyEmail: React.FC = () => {
             </div>
 
             <IonButton
-              className="neumorphic-button"
               expand="block"
               onClick={handleVerify}
-              disabled={loading || !code || !email}
+              disabled={isSubmitting || !code || !email}
             >
-              {loading ? "Verificando..." : "Verificar"}
+              {isSubmitting ? "Verificando..." : "Verificar"}
             </IonButton>
           </div>
         </div>
-
-        <IonLoading isOpen={loading} message="Procesando..." />
       </IonContent>
     </IonPage>
   );
-};
+}
 
 export default VerifyEmail;

@@ -420,7 +420,7 @@ export function UserForm() {
                 await formik.handleSubmit();
                 // Si no hay errores y no está enviando, redirige
                 if (Object.keys(formik.errors).length === 0 && !isSubmitting) {
-                  history.push("/verify-email"); // Cambia "/users" por la ruta deseada
+                  history.push("/verify-email", { email: formik.values.email });
                 }
               }}
               disabled={isSubmitting}
