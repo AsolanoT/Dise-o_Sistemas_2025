@@ -12,8 +12,6 @@ import {
 import {
   homeOutline,
   documentTextOutline,
-  peopleOutline,
-  locationOutline,
   receiptOutline,
   personOutline,
 } from "ionicons/icons";

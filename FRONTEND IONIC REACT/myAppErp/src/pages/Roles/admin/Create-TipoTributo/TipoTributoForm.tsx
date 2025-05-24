@@ -28,8 +28,8 @@ import {
   createTipoTributo,
   updateTipoTributo,
   getTipoTributoById,
-} from "../../../services/tipoTributo.service";
-import CustomHeader from "../../../components/CustomHeader/CustomHeader";
+} from "../../../../services/tipoTributo.service";
+import CustomHeader from "../../../../components/CustomHeader/CustomHeader";
 
 export function TipoTributoForm() {
   const { id } = useParams<{ id: string }>();

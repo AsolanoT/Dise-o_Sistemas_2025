@@ -32,7 +32,7 @@ export const validationSchema = () => Yup.object({
     .required('El email es requerido'),
   birthDate: Yup.string().required('La fecha de nacimiento es requerida'),
   password: Yup.string()
-    .min(6, 'La contraseña debe tener al menos 6 caracteres')
+    .min(4, 'La contraseña debe tener al menos 4 caracteres')
     .when('$isEdit', {
       is: (isEdit: boolean) => !isEdit,
       then: (schema) => schema.required('La contraseña es requerida'),

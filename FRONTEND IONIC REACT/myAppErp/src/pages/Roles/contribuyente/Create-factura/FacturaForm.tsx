@@ -27,12 +27,12 @@ import {
   saveOutline,
 } from "ionicons/icons";
 import { useHistory, useParams } from "react-router-dom";
-import { fetchUsers } from "../../services/auth.service";
+import { fetchUsers } from "../../../../services/auth.service";
 import {
   fetchTiposTributo,
   TipoTributo,
-} from "../../services/tipoTributo.service";
-import CustomHeader from "../../components/CustomHeader/CustomHeader";
+} from "../../../../services/tipoTributo.service";
+import CustomHeader from "../../../../components/CustomHeader/CustomHeader";
 
 interface User {
   id: string;

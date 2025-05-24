@@ -6,10 +6,12 @@ import {
   IonButton,
   IonIcon,
   IonMenuButton,
+  useIonToast,
 } from "@ionic/react";
 import { logOutOutline, cashOutline } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import "./CustomHeader.css";
+import { logout } from "../../services/role.service";
 
 interface CustomHeaderProps {
   pageName: string;
@@ -23,9 +25,26 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   showLogoutButton = true,
 }) => {
   const history = useHistory();
+  const [present] = useIonToast();
 
-  const handleLogout = () => {
-    history.push("/welcome");
+  const handleLogout = async () => {
+    try {
+      await logout();
+      present({
+        message: "Sesión cerrada correctamente",
+        duration: 2000,
+        position: "top",
+        color: "success",
+      });
+      history.push("/login");
+    } catch (error) {
+      present({
+        message: "Error al cerrar sesión",
+        duration: 3000,
+        position: "top",
+        color: "danger",
+      });
+    }
   };
 
   return (
@@ -47,11 +66,6 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
             <IonButton onClick={handleLogout}>
               <IonIcon icon={logOutOutline} />
             </IonButton>
-            {/*}
-            <IonButton>
-              <IonIcon icon={personCircleOutline} />
-            </IonButton>
-            */}
           </IonButtons>
         )}
       </IonToolbar>

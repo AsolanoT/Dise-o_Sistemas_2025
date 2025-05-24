@@ -3,6 +3,7 @@ package com.corhuila.app_erp_tributario.Controller;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -17,7 +18,6 @@ import com.corhuila.app_erp_tributario.DTO.UserDto;
 import com.corhuila.app_erp_tributario.Entity.User;
 import com.corhuila.app_erp_tributario.IService.IUserService;
 import com.corhuila.app_erp_tributario.Service.AuthService;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import org.springframework.security.core.Authentication;
 
@@ -63,13 +63,27 @@ public class AuthController extends ABaseController<User, IUserService> {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpSession session) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginDto loginDto, HttpSession session) {
         try {
             User user = authService.authenticate(loginDto);
+
+            // Crear respuesta con datos del usuario
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Login exitoso");
+            response.put("user", Map.of(
+                    "id", user.getId(),
+                    "email", user.getEmail(),
+                    "role", Map.of(
+                            "id", user.getRole().getId(),
+                            "nombre", user.getRole().getNombre())));
+
             session.setAttribute("user", user);
-            return ResponseEntity.ok("Login exitoso");
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
+                    "error", true,
+                    "message", e.getMessage()));
         }
     }
 

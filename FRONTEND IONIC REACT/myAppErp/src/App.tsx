@@ -21,16 +21,16 @@ import "@ionic/react/css/palettes/dark.system.css";
 /* Theme variables */
 import "./theme/variables.css";
 
-import HomeScreen from "./pages/inicio/HomeScreen";
+import HomeScreen from "./pages/Roles/admin/HomeAdmin/HomeScreen";
 import AdminDashboard from "./pages/Roles/admin/AdminDashboard";
 import EntidadDashboard from "./pages/Roles/entidad/EntidadDashboard";
-import { UserForm } from "./pages/Registration/Usuarios/UserForm";
-import { TipoTributoForm } from "./pages/Registration/TipoTributo/TipoTributoForm";
+import { UserForm } from "./pages/auth/RegistroUsuarios/UserForm";
+import { TipoTributoForm } from "./pages/Roles/admin/Create-TipoTributo/TipoTributoForm";
 import ContribuyenteDashboard from "./pages/Roles/contribuyente/ContribuyenteDashboard";
 import RoleRedirector from "./components/RoleRedirector";
 import VerifyEmail from "./pages/auth/VerifyEmail/VerifyEmail";
-import Login from "./pages/auth/Login/Login";
-import FacturaForm from "./pages/factura/FacturaForm";
+import FacturaForm from "./pages/Roles/contribuyente/Create-factura/FacturaForm";
+import { Login } from "./pages/auth/Login/Login";
 
 setupIonicReact();
 

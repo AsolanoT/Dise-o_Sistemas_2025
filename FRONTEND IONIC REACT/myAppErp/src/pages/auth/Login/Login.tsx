@@ -9,142 +9,105 @@ import {
   useIonToast,
 } from "@ionic/react";
 import { useEffect, useState } from "react";
+import { useFormik } from "formik";
 import { useHistory } from "react-router-dom";
 import { eye, eyeOff, mailOutline, lockClosedOutline } from "ionicons/icons";
 import "./Login.css";
-import { authService } from "../../../services/role.service";
+import { loginUser } from "../../../services/role.service";
+import { initialValues, validationSchema } from "./Login.form";
 
-const Login: React.FC = () => {
-  const history = useHistory();
+export function Login() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [present] = useIonToast();
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-    general: "",
-  });
-  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const history = useHistory();
 
-  const handleInputChange = (field: keyof typeof formData, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-    setErrors((prev) => ({
-      ...prev,
-      [field]: "",
-      general: "",
-    }));
-  };
+  const formik = useFormik({
+    initialValues: initialValues(),
+    validationSchema: validationSchema(),
+    validateOnChange: false,
+    onSubmit: async (values) => {
+      setIsSubmitting(true);
 
-  const validateForm = () => {
-    let isValid = true;
-    const newErrors = { email: "", password: "", general: "" };
+      try {
+        const response = await loginUser({
+          email: values.email.trim().toLowerCase(),
+          password: values.password,
+        });
 
-    if (!formData.email.trim()) {
-      newErrors.email = "Correo electrónico es requerido";
-      isValid = false;
-    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-      newErrors.email = "Correo electrónico inválido";
-      isValid = false;
-    }
+        console.log("Login exitoso:", response);
 
-    if (!formData.password) {
-      newErrors.password = "Contraseña es requerida";
-      isValid = false;
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Mínimo 6 caracteres";
-      isValid = false;
-    }
+        // Mostramos mensaje de éxito
+        present({
+          message: `Bienvenido ${response.user.email}`,
+          duration: 2000,
+          position: "top",
+          color: "success",
+        });
 
-    setErrors(newErrors);
-    return isValid;
-  };
-
-  const handleLogin = async () => {
-    if (!validateForm()) return;
-
-    setLoading(true);
-
-    try {
-      // Usamos el servicio de autenticación
-      const user = await authService.login(
-        formData.email.toLowerCase().trim(),
-        formData.password
-      );
-
-      // Mostramos mensaje de éxito
-      present({
-        message: `Bienvenido ${user.email}`,
-        duration: 2000,
-        position: "top",
-        color: "success",
-      });
-
-      // Redirigimos según el rol del usuario
-      if (user.role.nombre === "Administrador") {
-        history.push("/admin/dashboard");
-      } else if (user.role.nombre === "Contribuyente") {
-        history.push("/contribuyente/dashboard");
-      } else {
-        history.push("/dashboard");
+        // Redirigimos según el rol del usuario
+        if (response.user.role.nombre === "Administrador") {
+          history.push("/admin/home");
+        } else if (response.user.role.nombre === "Contribuyente") {
+          history.push("/contribuyente/home");
+        } else {
+          history.push("/home");
+        }
+      } catch (error: any) {
+        console.error("Error en login:", error);
+        present({
+          message: error.message || "Credenciales incorrectas",
+          duration: 3000,
+          position: "top",
+          color: "danger",
+        });
+      } finally {
+        setIsSubmitting(false);
       }
-    } catch (error: any) {
-      console.error("Error en login:", error);
-      setErrors((prev) => ({
-        ...prev,
-        general: error.message || "Credenciales incorrectas",
-      }));
-      present({
-        message: error.message || "Error al iniciar sesión",
-        duration: 3000,
-        position: "top",
-        color: "danger",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+  });
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleLogin();
+  // Verificar si el usuario ya está autenticado
+  useEffect(() => {
+    const userData = localStorage.getItem("userData");
+    if (userData) {
+      const user = JSON.parse(userData);
+
+      // Redirigir según el rol
+      if (user.role.nombre === "Administrador") {
+        history.push("/admin/home");
+      } else if (user.role.nombre === "Contribuyente") {
+        history.push("/contribuyente/home");
+      } else {
+        history.push("/home");
+      }
     }
-  };
+  }, [history]);
 
   return (
     <IonPage id="main-content">
       <IonContent className="login-content">
         <div className="login-container">
-          <div className="neumorphic-card">
+          <form onSubmit={formik.handleSubmit} className="neumorphic-card">
             <h1>Acceso al Sistema Tributario</h1>
-
-            {errors.general && (
-              <IonText color="danger" className="error-message">
-                <p>{errors.general}</p>
-              </IonText>
-            )}
 
             <div className="input-group">
               <IonIcon icon={mailOutline} className="input-icon" />
               <IonInput
-                className={`neumorphic-input ${
-                  errors.email ? "input-error" : ""
-                }`}
                 placeholder="Correo electrónico"
                 type="email"
-                value={formData.email}
-                onIonChange={(e) => handleInputChange("email", e.detail.value!)}
-                onKeyPress={handleKeyPress}
+                value={formik.values.email}
+                onIonChange={(e) =>
+                  formik.setFieldValue("email", e.detail.value!)
+                }
+                className={`neumorphic-input ${
+                  formik.errors.email ? "input-error" : ""
+                }`}
               />
             </div>
-            {errors.email && (
+            {formik.errors.email && (
               <IonText color="danger" className="error-message">
-                <p>{errors.email}</p>
+                <small>{formik.errors.email}</small>
               </IonText>
             )}
 
@@ -152,16 +115,15 @@ const Login: React.FC = () => {
               <IonIcon icon={lockClosedOutline} className="input-icon" />
               <div className="password-container">
                 <IonInput
-                  className={`neumorphic-input ${
-                    errors.password ? "input-error" : ""
-                  }`}
                   type={showPassword ? "text" : "password"}
-                  placeholder="Contraseña"
-                  value={formData.password}
+                  placeholder="Ingresa tu contraseña"
+                  value={formik.values.password}
                   onIonChange={(e) =>
-                    handleInputChange("password", e.detail.value!)
+                    formik.setFieldValue("password", e.detail.value!)
                   }
-                  onKeyPress={handleKeyPress}
+                  className={`neumorphic-input ${
+                    formik.errors.password ? "input-error" : ""
+                  }`}
                 />
                 <IonIcon
                   icon={showPassword ? eyeOff : eye}
@@ -170,19 +132,19 @@ const Login: React.FC = () => {
                 />
               </div>
             </div>
-            {errors.password && (
+            {formik.errors.password && (
               <IonText color="danger" className="error-message">
-                <p>{errors.password}</p>
+                <small>{formik.errors.password}</small>
               </IonText>
             )}
 
             <IonButton
               className="neumorphic-button"
               expand="block"
-              onClick={handleLogin}
-              disabled={loading}
+              type="submit"
+              disabled={isSubmitting}
             >
-              {loading ? "Verificando..." : "Iniciar Sesión"}
+              {isSubmitting ? "Verificando..." : "Iniciar sesión"}
             </IonButton>
 
             <div className="login-links">
@@ -194,13 +156,11 @@ const Login: React.FC = () => {
                 Registrarse
               </IonButton>
             </div>
-          </div>
+          </form>
         </div>
 
-        <IonLoading isOpen={loading} message="Autenticando..." />
+        <IonLoading isOpen={isSubmitting} message="Iniciando sesión..." />
       </IonContent>
     </IonPage>
   );
-};
-
-export default Login;
+}

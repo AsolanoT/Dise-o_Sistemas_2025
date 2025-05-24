@@ -22,7 +22,7 @@ import {
   shieldCheckmarkOutline,
 } from "ionicons/icons";
 import "./HomeScreen.css";
-import CustomHeader from "../../components/CustomHeader/CustomHeader";
+import CustomHeader from "../../../../components/CustomHeader/CustomHeader";
 
 interface CardData {
   id: string;
