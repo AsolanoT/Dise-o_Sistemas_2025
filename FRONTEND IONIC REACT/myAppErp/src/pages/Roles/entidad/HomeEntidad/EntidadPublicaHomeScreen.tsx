@@ -50,7 +50,7 @@ const EntidadPublicaHomeScreen: React.FC = () => {
       description: "Consulta todas las facturas",
       icon: documentTextOutline,
       color: "primary",
-      route: "/entidad/facturas",
+      route: "/view-facturas",
       badgeCount: facturasPendientesTotal,
     },
     {
@@ -59,7 +59,7 @@ const EntidadPublicaHomeScreen: React.FC = () => {
       description: "Gestión de contribuyentes",
       icon: peopleOutline,
       color: "secondary",
-      route: "/entidad/contribuyentes",
+      route: "/view-contribuyentes",
       badgeCount: contribuyentesRegistrados,
     },
   ];
@@ -124,7 +124,7 @@ const EntidadPublicaHomeScreen: React.FC = () => {
           <IonButton
             expand="block"
             color="primary"
-            onClick={() => navigateTo("/entidad/facturas")}
+            onClick={() => navigateTo("/view-facturas")}
           >
             Ver Todas las Facturas
           </IonButton>

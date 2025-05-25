@@ -33,6 +33,12 @@ import {
   TipoTributo,
 } from "../../../../services/tipoTributo.service";
 import CustomHeader from "../../../../components/CustomHeader/CustomHeader";
+import {
+  createFactura,
+  updateFactura,
+  getFacturaById,
+  Factura as IFactura,
+} from "../../../../services/factura.service";
 
 interface User {
   id: string;
@@ -118,21 +124,55 @@ const FacturaForm: React.FC = () => {
     try {
       setErrorMessage("");
 
-      // Aquí iría la lógica para guardar la factura
-      // Por ahora solo mostramos un mensaje de éxito
-      present({
-        message: id
-          ? "Factura actualizada con éxito"
-          : "Factura creada con éxito",
-        duration: 2000,
-        color: "success",
-      });
+      // Preparar los datos para enviar al backend
+      const facturaData: Omit<IFactura, "id"> = {
+        status: true,
+        user: {
+          id: parseInt(values.user.id), // Convertir a número si es necesario
+        },
+        tipoTributo: {
+          id: values.tipoTributo.id,
+        },
+        periodo: values.periodo,
+        baseCalculo: values.baseCalculo,
+        valorEstimado: values.valorEstimado,
+        estado: values.estado,
+        concepto: values.concepto,
+        fechaEmision: values.fechaEmision,
+        fechaVencimiento: values.fechaVencimiento,
+      };
+
+      if (id) {
+        // Modo edición
+        await updateFactura(parseInt(id), facturaData);
+        present({
+          message: "Factura actualizada con éxito",
+          duration: 2000,
+          color: "success",
+        });
+      } else {
+        // Modo creación
+        await createFactura(facturaData);
+        present({
+          message: "Factura creada con éxito",
+          duration: 2000,
+          color: "success",
+        });
+      }
 
       // Redirigir después de guardar
       history.push("/facturas");
     } catch (error: any) {
-      setErrorMessage(error.message || "Error al guardar la factura");
+      const errorMsg =
+        error.response?.data?.message || "Error al guardar la factura";
+      setErrorMessage(errorMsg);
       console.error("Error al guardar la factura:", error);
+
+      present({
+        message: errorMsg,
+        duration: 3000,
+        color: "danger",
+      });
     }
   };
 
@@ -159,24 +199,33 @@ const FacturaForm: React.FC = () => {
 
         // Si estamos editando, cargar los datos de la factura
         if (id) {
-          // Aquí iría la llamada para obtener los datos de la factura
-          // Por ahora usamos valores de prueba
+          const factura = await getFacturaById(parseInt(id));
+
           formik.setValues({
-            status: true,
-            user: { id: usuarios[0]?.id || "" },
-            tipoTributo: { id: tributos[0]?.id || 0 },
-            periodo: "2023-01",
-            baseCalculo: 1000,
-            valorEstimado: 120,
-            estado: "PENDIENTE",
-            concepto: "Pago de impuesto predial",
-            fechaEmision: "2023-01-15",
-            fechaVencimiento: "2023-02-15",
+            status: factura.status,
+            user: { id: factura.user.id.toString() },
+            tipoTributo: { id: factura.tipoTributo.id },
+            periodo: factura.periodo,
+            baseCalculo: factura.baseCalculo,
+            valorEstimado: factura.valorEstimado,
+            estado: factura.estado,
+            concepto: factura.concepto,
+            fechaEmision: factura.fechaEmision.split("T")[0], // Formatear fecha si es necesario
+            fechaVencimiento: factura.fechaVencimiento.split("T")[0],
           });
         }
       } catch (error: any) {
-        setErrorMessage(error.message || "Error al cargar los datos iniciales");
+        const errorMsg =
+          error.response?.data?.message ||
+          "Error al cargar los datos iniciales";
+        setErrorMessage(errorMsg);
         console.error("Error al cargar datos iniciales:", error);
+
+        present({
+          message: errorMsg,
+          duration: 3000,
+          color: "danger",
+        });
       } finally {
         setLoading(false);
       }

@@ -265,3 +265,20 @@ export const fetchUsers = async (): Promise<any[]> => {
   }
 };
 
+export const getCurrentUser = (): { id: number; [key: string]: any } | null => {
+  const userData = localStorage.getItem('userData');
+  if (!userData) {
+    console.warn('No se encontraron datos de usuario en localStorage');
+    return null;
+  }
+  
+  try {
+    const user = JSON.parse(userData);
+    console.log('Usuario actual obtenido:', user);
+    return user;
+  } catch (error) {
+    console.error('Error al parsear userData:', error);
+    return null;
+  }
+};
+

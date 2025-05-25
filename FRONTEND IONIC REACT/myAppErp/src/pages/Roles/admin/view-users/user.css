@@ -1,0 +1,35 @@
+/* Estilos para la lista de usuarios */
+ion-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ion-color-light);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+  }
+  
+  ion-item {
+    --padding-start: 10px;
+    --inner-padding-end: 10px;
+  }
+  
+  ion-badge {
+    margin-left: 8px;
+  }
+  
+  /* Estilos para el mensaje de no usuarios */
+  .no-users {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+    text-align: center;
+  }
+  
+  /* Estilos para los botones de acción */
+  ion-buttons {
+    display: flex;
+    gap: 5px;
+  }

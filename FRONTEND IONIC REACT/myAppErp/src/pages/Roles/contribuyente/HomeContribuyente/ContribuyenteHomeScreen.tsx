@@ -50,7 +50,7 @@ const ContribuyenteHomeScreen: React.FC = () => {
       description: "Consulta tus facturas pendientes",
       icon: documentTextOutline,
       color: "primary",
-      route: "/contribuyente/facturas",
+      route: "/factura-contribuyentes",
       badgeCount: facturasPendientes,
     },
     {

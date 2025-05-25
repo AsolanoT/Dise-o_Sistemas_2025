@@ -59,7 +59,7 @@ const HomeScreen: React.FC = () => {
       description: "Gestión de permisos",
       icon: shieldCheckmarkOutline,
       color: "success",
-      route: "/usuario",
+      route: "/view-users",
     },
   ];
 

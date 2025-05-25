@@ -76,3 +76,24 @@ export const getFacturaById = async (id: number): Promise<Factura> => {
     throw error;
   }
 };
+
+export const fetchFacturasByUser = async (userId: number): Promise<Factura[]> => {
+  try {
+    // Asegúrate de que tu endpoint API soporte este filtro
+    const response = await api.get<Factura[]>(`/factura?userId=${userId}`);
+    
+    // Verifica que la respuesta tenga datos y el formato correcto
+    if (!response.data || !Array.isArray(response.data)) {
+      throw new Error('Formato de respuesta inválido');
+    }
+    
+    // Filtra por status y por usuario (doble verificación)
+    return response.data.filter((item: Factura) => 
+      item.status === true && 
+      item.user?.id === userId
+    );
+  } catch (error) {
+    console.error('Error fetching facturas by user:', error);
+    throw new Error('No se pudieron cargar las facturas. Por favor, intente más tarde.');
+  }
+};

@@ -22,7 +22,6 @@ import "@ionic/react/css/palettes/dark.system.css";
 import "./theme/variables.css";
 
 import HomeScreen from "./pages/Roles/admin/HomeAdmin/HomeScreen";
-import AdminDashboard from "./pages/Roles/admin/AdminDashboard";
 import { UserForm } from "./pages/auth/RegistroUsuarios/UserForm";
 import { TipoTributoForm } from "./pages/Roles/admin/Create-TipoTributo/TipoTributoForm";
 import RoleRedirector from "./components/RoleRedirector";
@@ -31,6 +30,10 @@ import FacturaForm from "./pages/Roles/admin/Create-factura/FacturaForm";
 import { Login } from "./pages/auth/Login/Login";
 import ContribuyenteHomeScreen from "./pages/Roles/contribuyente/HomeContribuyente/ContribuyenteHomeScreen";
 import EntidadPublicaHomeScreen from "./pages/Roles/entidad/HomeEntidad/EntidadPublicaHomeScreen";
+import { ViewUsers } from "./pages/Roles/admin/view-users/users";
+import { ViewFacturas } from "./pages/Roles/entidad/view-factura/ViewFacturas";
+import { ViewContribuyentes } from "./pages/Roles/entidad/view-contribuyentes/ViewContribuyentes";
+import { ViewFacturasContribuyente } from "./pages/Roles/contribuyente/view-facturaContribuyente/ViewFacturasContribuyente";
 
 setupIonicReact();
 
@@ -46,11 +49,6 @@ const App: React.FC = () => (
         {/*        Rutas públicas con menú        */}
 
         {/* Manejo de rol por Administrador */}
-        <Route exact path="/admin">
-          <MainLayout pageName="Administrador">
-            <AdminDashboard />
-          </MainLayout>
-        </Route>
 
         <Route exact path="/admin/home">
           <MainLayout pageName="Página Principal">
@@ -70,7 +68,19 @@ const App: React.FC = () => (
           </MainLayout>
         </Route>
 
-        {/* Manejo de rol por entidad pueblica */}
+        <Route exact path="/view-users">
+          <MainLayout pageName="vista de usuarios">
+            <ViewUsers />
+          </MainLayout>
+        </Route>
+
+        <Route exact path="/users/edit/:id">
+          <MainLayout pageName="vista de usuarios">
+            <UserForm />
+          </MainLayout>
+        </Route>
+
+        {/* Manejo de rol por entidad publica */}
         
 
         <Route exact path="/entidad_publica/home">
@@ -79,11 +89,28 @@ const App: React.FC = () => (
           </MainLayout>
         </Route>
 
+        <Route exact path="/view-facturas">
+          <MainLayout pageName="visualizar Facturas">
+            <ViewFacturas />
+          </MainLayout>
+        </Route>
+
+        <Route exact path="/view-contribuyentes">
+          <MainLayout pageName="visualizar contribuyentes">
+            <ViewContribuyentes />
+          </MainLayout>
+        </Route>
         {/* Manejo de rol por Contributente */}
 
         <Route exact path="/contribuyente/home">
           <MainLayout pageName="Página Principal">
             <ContribuyenteHomeScreen />
+          </MainLayout>
+        </Route>
+
+        <Route exact path="/factura-contribuyentes">
+          <MainLayout pageName="Mis Facturas">
+            <ViewFacturasContribuyente />
           </MainLayout>
         </Route>
 
