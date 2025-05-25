@@ -1,0 +1,26 @@
+.tipo-tributo-card {
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.tipo-tributo-card:hover {
+  transform: translateY(-2px);
+}
+
+.tipo-tributo-avatar {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--ion-color-light);
+}
+
+.tipo-tributo-avatar ion-icon {
+  font-size: 24px;
+}
+
+ion-chip {
+  margin: 4px;
+}

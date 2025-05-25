@@ -63,6 +63,14 @@ const HomeScreen: React.FC = () => {
     },
     {
       id: "4",
+      title: "Consultar Tributos",
+      description: "Consulta todos los tributos",
+      icon: shieldCheckmarkOutline,
+      color: "success",
+      route: "/view-tributos-admin",
+    },
+    {
+      id: "5",
       title: "Usuarios",
       description: "Gestión de permisos",
       icon: shieldCheckmarkOutline,

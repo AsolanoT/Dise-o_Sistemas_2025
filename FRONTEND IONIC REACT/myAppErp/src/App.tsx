@@ -35,6 +35,7 @@ import { ViewFacturas } from "./pages/Roles/entidad/view-factura/ViewFacturas";
 import { ViewContribuyentes } from "./pages/Roles/entidad/view-contribuyentes/ViewContribuyentes";
 import { ViewFacturasContribuyente } from "./pages/Roles/contribuyente/view-facturaContribuyente/ViewFacturasContribuyente";
 import { ViewFacturasAdmin } from "./pages/Roles/admin/View-Facturas/ViewFacturas";
+import { ViewTiposTributo } from "./pages/Roles/admin/View-Tributos/ViewTiposTributo";
 
 setupIonicReact();
 
@@ -72,6 +73,11 @@ const App: React.FC = () => (
         <Route exact path="/tipo-tributo">
           <MainLayout pageName="Tipo de Tributo">
             <TipoTributoForm />
+          </MainLayout>
+        </Route>
+        <Route exact path="/view-tributos-admin">
+          <MainLayout pageName="Visualizar Tributo">
+            <ViewTiposTributo />
           </MainLayout>
         </Route>
 
