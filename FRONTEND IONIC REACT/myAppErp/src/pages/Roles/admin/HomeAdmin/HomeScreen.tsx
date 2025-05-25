@@ -66,7 +66,7 @@ const HomeScreen: React.FC = () => {
       title: "Consultar Tributos",
       description: "Consulta todos los tributos",
       icon: shieldCheckmarkOutline,
-      color: "success",
+      color: "secondary",
       route: "/view-tributos-admin",
     },
     {
