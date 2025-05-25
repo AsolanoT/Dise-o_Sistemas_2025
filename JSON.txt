@@ -102,7 +102,7 @@ Factura
 },
 {
   "status": true,
-  "nombre": "SuperAdmin"
+  "nombre": "Administrador"
 }
 -----------------------
 	REGISTRO DE USUARIOS:
@@ -165,12 +165,22 @@ Así, cuando el sistema procese los datos de un contribuyente, calculará la bas
   },
   "periodo": "2025-04",
   "baseCalculo": 8000000,
-  "valorEstimado": 1520000, //AUTO
   "estado": "Pagado",
   "concepto": "Declaración tributaria del mes de abril",
   "fechaEmision": "2025-05-19",
   "fechaVencimiento": "2025-05-31"
 }
+
+se excluye:
+  "valorEstimado": 1520000, //AUTO
+
+
+ la base de cálculo representa el valor económico sujeto a la tributación, que puede derivarse de ingresos, ventas, utilidades, patrimonio, costos, entre otros factores.
+Contexto General de la Base de Cálculo
+Cada tributo tiene una fórmula específica para determinar la base de cálculo, dependiendo de la naturaleza del impuesto. Algunas bases comunes incluyen:
+- Ventas o Ingresos Brutos 🛒
+- Aplicable en impuestos como el IVA o tributos sobre ingresos empresariales.
+- Ejemplo: Si una empresa factura $50,000 en un mes, ese monto puede servir como base para calcular el tributo.
 
 
 -----------------------------------------------------------------------
