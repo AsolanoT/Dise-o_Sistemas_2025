@@ -50,6 +50,8 @@ export function Login() {
           history.push("/admin/home");
         } else if (response.user.role.nombre === "Contribuyente") {
           history.push("/contribuyente/home");
+        } else if (response.user.role.nombre === "Entidad Pública") {
+          history.push("/entidad_publica/home");
         } else {
           history.push("/home");
         }
@@ -78,6 +80,8 @@ export function Login() {
         history.push("/admin/home");
       } else if (user.role.nombre === "Contribuyente") {
         history.push("/contribuyente/home");
+      } else if (user.role.nombre === "Entidad Pública") {
+        history.push("/entidad_publica/home");
       } else {
         history.push("/home");
       }

@@ -1,0 +1,51 @@
+/* Estilos específicos para las páginas de home */
+.welcome-card {
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.welcome-subtitle {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.card-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-weight: bold;
+}
+
+/* Colores específicos para cada rol */
+.contribuyente-card {
+  --ion-color-primary: #2e7d32;
+  --ion-color-primary-rgb: 46,125,50;
+}
+
+.entidad-card {
+  --ion-color-primary: #1565c0;
+  --ion-color-primary-rgb: 21,101,192;
+}
+
+/* Ajustes para los botones de acciones rápidas */
+.quick-actions ion-button {
+  margin: 0.5rem 0;
+  font-size: 1.05rem;
+  height: 50px;
+}
+
+/* Efecto hover para las tarjetas */
+.feature-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}

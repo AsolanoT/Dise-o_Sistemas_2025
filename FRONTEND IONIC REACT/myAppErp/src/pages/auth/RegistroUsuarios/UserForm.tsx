@@ -384,9 +384,9 @@ export function UserForm() {
               }
               placeholder="Seleccione rol"
             >
-              <IonSelectOption value="1">Super Admin</IonSelectOption>
-              <IonSelectOption value="2">Entidad Pública</IonSelectOption>
-              <IonSelectOption value="3">Contribuyente</IonSelectOption>
+              <IonSelectOption value="1">Administrador</IonSelectOption>
+              <IonSelectOption value="2">Contribuyente</IonSelectOption>
+              <IonSelectOption value="3">Entidad Pública</IonSelectOption>
             </IonSelect>
           </IonItem>
           {formik.errors.roleId && (

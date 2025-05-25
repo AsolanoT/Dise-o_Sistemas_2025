@@ -29,8 +29,10 @@ import { TipoTributoForm } from "./pages/Roles/admin/Create-TipoTributo/TipoTrib
 import ContribuyenteDashboard from "./pages/Roles/contribuyente/ContribuyenteDashboard";
 import RoleRedirector from "./components/RoleRedirector";
 import VerifyEmail from "./pages/auth/VerifyEmail/VerifyEmail";
-import FacturaForm from "./pages/Roles/contribuyente/Create-factura/FacturaForm";
+import FacturaForm from "./pages/Roles/admin/Create-factura/FacturaForm";
 import { Login } from "./pages/auth/Login/Login";
+import ContribuyenteHomeScreen from "./pages/Roles/contribuyente/HomeContribuyente/ContribuyenteHomeScreen";
+import EntidadPublicaHomeScreen from "./pages/Roles/entidad/HomeEntidad/EntidadPublicaHomeScreen";
 
 setupIonicReact();
 
@@ -45,22 +47,16 @@ const App: React.FC = () => (
 
         {/*        Rutas públicas con menú        */}
 
-        {/* Dashboards por rol */}
+        {/* Manejo de rol por Administrador */}
         <Route exact path="/admin">
           <MainLayout pageName="Administrador">
             <AdminDashboard />
           </MainLayout>
         </Route>
 
-        <Route exact path="/entidad">
-          <MainLayout pageName="Entidad Pública">
-            <EntidadDashboard />
-          </MainLayout>
-        </Route>
-
-        <Route exact path="/contribuyente">
-          <MainLayout pageName="Contribuyente">
-            <ContribuyenteDashboard />
+        <Route exact path="/admin/home">
+          <MainLayout pageName="Página Principal">
+            <HomeScreen />
           </MainLayout>
         </Route>
 
@@ -76,9 +72,29 @@ const App: React.FC = () => (
           </MainLayout>
         </Route>
 
-        <Route exact path="/home">
+        {/* Manejo de rol por entidad pueblica */}
+        <Route exact path="/entidad">
+          <MainLayout pageName="Entidad Pública">
+            <EntidadDashboard />
+          </MainLayout>
+        </Route>
+
+        <Route exact path="/entidad_publica/home">
           <MainLayout pageName="Página Principal">
-            <HomeScreen />
+            <EntidadPublicaHomeScreen />
+          </MainLayout>
+        </Route>
+
+        {/* Manejo de rol por Contributente */}
+        <Route exact path="/contribuyente">
+          <MainLayout pageName="Contribuyente">
+            <ContribuyenteDashboard />
+          </MainLayout>
+        </Route>
+
+        <Route exact path="/contribuyente/home">
+          <MainLayout pageName="Página Principal">
+            <ContribuyenteHomeScreen />
           </MainLayout>
         </Route>
 
