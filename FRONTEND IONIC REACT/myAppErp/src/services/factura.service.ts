@@ -11,7 +11,7 @@ export interface Factura {
   };
   periodo: string;
   baseCalculo: number;
-  valorEstimado: number;
+  valorEstimado?: number;
   estado: string;
   concepto: string;
   fechaEmision: string;

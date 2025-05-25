@@ -57,7 +57,6 @@ interface FacturaFormValues {
   };
   periodo: string;
   baseCalculo: number;
-  valorEstimado: number;
   estado: string;
   concepto: string;
   fechaEmision: string;
@@ -90,9 +89,6 @@ const FacturaForm: React.FC = () => {
     baseCalculo: Yup.number()
       .min(0, "La base de cálculo no puede ser negativa")
       .required("La base de cálculo es requerida"),
-    valorEstimado: Yup.number()
-      .min(0, "El valor estimado no puede ser negativo")
-      .required("El valor estimado es requerido"),
     estado: Yup.string().required("Seleccione un estado"),
     concepto: Yup.string().required("El concepto es requerido"),
     fechaEmision: Yup.string().required("La fecha de emisión es requerida"),
@@ -112,7 +108,6 @@ const FacturaForm: React.FC = () => {
     },
     periodo: "",
     baseCalculo: 0,
-    valorEstimado: 0,
     estado: "",
     concepto: "",
     fechaEmision: "",
@@ -135,7 +130,6 @@ const FacturaForm: React.FC = () => {
         },
         periodo: values.periodo,
         baseCalculo: values.baseCalculo,
-        valorEstimado: values.valorEstimado,
         estado: values.estado,
         concepto: values.concepto,
         fechaEmision: values.fechaEmision,
@@ -207,7 +201,6 @@ const FacturaForm: React.FC = () => {
             tipoTributo: { id: factura.tipoTributo.id },
             periodo: factura.periodo,
             baseCalculo: factura.baseCalculo,
-            valorEstimado: factura.valorEstimado,
             estado: factura.estado,
             concepto: factura.concepto,
             fechaEmision: factura.fechaEmision.split("T")[0], // Formatear fecha si es necesario
@@ -373,7 +366,7 @@ const FacturaForm: React.FC = () => {
               </IonText>
             )}
 
-            {/* Valor Estimado */}
+            {/* Valor Estimado 
             <IonItem className="custom-item">
               <IonIcon
                 icon={cashOutline}
@@ -399,6 +392,7 @@ const FacturaForm: React.FC = () => {
                 <small>{formik.errors.valorEstimado}</small>
               </IonText>
             )}
+              */}
 
             {/* Estado */}
             <IonItem className="custom-item">
