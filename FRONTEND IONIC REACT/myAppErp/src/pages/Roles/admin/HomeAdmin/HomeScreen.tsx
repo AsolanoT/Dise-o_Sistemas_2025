@@ -47,14 +47,6 @@ const HomeScreen: React.FC = () => {
     },
     {
       id: "2",
-      title: "Contribuyentes",
-      description: "Administración de perfiles",
-      icon: peopleOutline,
-      color: "secondary",
-      route: "/contribuyente",
-    },
-    {
-      id: "3",
       title: "Tributos",
       description: "Tipos de tributos y tasas",
       icon: cashOutline,
@@ -62,7 +54,7 @@ const HomeScreen: React.FC = () => {
       route: "/tipo-tributo",
     },
     {
-      id: "4",
+      id: "3",
       title: "Usuarios",
       description: "Gestión de permisos",
       icon: shieldCheckmarkOutline,
@@ -129,13 +121,6 @@ const HomeScreen: React.FC = () => {
             onClick={() => navigateTo("/factura")}
           >
             Nueva Factura
-          </IonButton>
-          <IonButton
-            expand="block"
-            fill="outline"
-            onClick={() => navigateTo("/contribuyente")}
-          >
-            Registrar Contribuyente
           </IonButton>
         </div>
       </IonContent>

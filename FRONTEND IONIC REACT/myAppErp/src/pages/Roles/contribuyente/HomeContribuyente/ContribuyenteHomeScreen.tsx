@@ -61,23 +61,7 @@ const ContribuyenteHomeScreen: React.FC = () => {
       color: "success",
       route: "/contribuyente/pagos",
     },
-    {
-      id: "3",
-      title: "Historial de Pagos",
-      description: "Consulta tus pagos realizados",
-      icon: receiptOutline,
-      color: "tertiary",
-      route: "/contribuyente/historial",
-      badgeCount: facturasPagadas,
-    },
-    {
-      id: "4",
-      title: "Mi Perfil",
-      description: "Actualiza tu información personal",
-      icon: personCircleOutline,
-      color: "medium",
-      route: "/contribuyente/perfil",
-    },
+    
   ];
 
   const navigateTo = (route: string) => {
@@ -88,7 +72,7 @@ const ContribuyenteHomeScreen: React.FC = () => {
     <IonPage>
       <CustomHeader
         pageName="Área del Contribuyente"
-        showMenuButton={true}
+        showMenuButton={false}
         showLogoutButton={true}
       />
 
@@ -135,24 +119,6 @@ const ContribuyenteHomeScreen: React.FC = () => {
             ))}
           </IonRow>
         </IonGrid>
-
-        <div className="quick-actions">
-          <IonButton
-            expand="block"
-            color="primary"
-            onClick={() => navigateTo("/contribuyente/pagos")}
-          >
-            Pagar Facturas Pendientes
-          </IonButton>
-          <IonButton
-            expand="block"
-            color="medium"
-            fill="outline"
-            onClick={() => navigateTo("/contribuyente/facturas")}
-          >
-            Ver Todas mis Facturas
-          </IonButton>
-        </div>
       </IonContent>
     </IonPage>
   );

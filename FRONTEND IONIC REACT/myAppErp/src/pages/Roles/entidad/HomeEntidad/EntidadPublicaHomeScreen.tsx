@@ -62,22 +62,6 @@ const EntidadPublicaHomeScreen: React.FC = () => {
       route: "/entidad/contribuyentes",
       badgeCount: contribuyentesRegistrados,
     },
-    {
-      id: "3",
-      title: "Reportes",
-      description: "Genera reportes y estadísticas",
-      icon: analyticsOutline,
-      color: "tertiary",
-      route: "/entidad/reportes",
-    },
-    {
-      id: "4",
-      title: "Tributos",
-      description: "Administración de tributos",
-      icon: pricetagOutline,
-      color: "warning",
-      route: "/entidad/tributos",
-    },
   ];
 
   const navigateTo = (route: string) => {
@@ -88,7 +72,7 @@ const EntidadPublicaHomeScreen: React.FC = () => {
     <IonPage>
       <CustomHeader
         pageName="Área de la Entidad Pública"
-        showMenuButton={true}
+        showMenuButton={false}
         showLogoutButton={true}
       />
 
@@ -143,13 +127,6 @@ const EntidadPublicaHomeScreen: React.FC = () => {
             onClick={() => navigateTo("/entidad/facturas")}
           >
             Ver Todas las Facturas
-          </IonButton>
-          <IonButton
-            expand="block"
-            color="secondary"
-            onClick={() => navigateTo("/entidad/contribuyentes")}
-          >
-            Gestionar Contribuyentes
           </IonButton>
         </div>
       </IonContent>

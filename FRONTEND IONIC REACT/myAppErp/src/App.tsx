@@ -23,10 +23,8 @@ import "./theme/variables.css";
 
 import HomeScreen from "./pages/Roles/admin/HomeAdmin/HomeScreen";
 import AdminDashboard from "./pages/Roles/admin/AdminDashboard";
-import EntidadDashboard from "./pages/Roles/entidad/EntidadDashboard";
 import { UserForm } from "./pages/auth/RegistroUsuarios/UserForm";
 import { TipoTributoForm } from "./pages/Roles/admin/Create-TipoTributo/TipoTributoForm";
-import ContribuyenteDashboard from "./pages/Roles/contribuyente/ContribuyenteDashboard";
 import RoleRedirector from "./components/RoleRedirector";
 import VerifyEmail from "./pages/auth/VerifyEmail/VerifyEmail";
 import FacturaForm from "./pages/Roles/admin/Create-factura/FacturaForm";
@@ -73,11 +71,7 @@ const App: React.FC = () => (
         </Route>
 
         {/* Manejo de rol por entidad pueblica */}
-        <Route exact path="/entidad">
-          <MainLayout pageName="Entidad Pública">
-            <EntidadDashboard />
-          </MainLayout>
-        </Route>
+        
 
         <Route exact path="/entidad_publica/home">
           <MainLayout pageName="Página Principal">
@@ -86,11 +80,6 @@ const App: React.FC = () => (
         </Route>
 
         {/* Manejo de rol por Contributente */}
-        <Route exact path="/contribuyente">
-          <MainLayout pageName="Contribuyente">
-            <ContribuyenteDashboard />
-          </MainLayout>
-        </Route>
 
         <Route exact path="/contribuyente/home">
           <MainLayout pageName="Página Principal">
