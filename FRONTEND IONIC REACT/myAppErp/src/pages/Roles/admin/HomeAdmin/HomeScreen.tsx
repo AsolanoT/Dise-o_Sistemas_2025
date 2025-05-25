@@ -39,7 +39,7 @@ const HomeScreen: React.FC = () => {
   const cards: CardData[] = [
     {
       id: "1",
-      title: "Facturas",
+      title: "Creación de Facturas",
       description: "Gestión de facturas y pagos",
       icon: documentTextOutline,
       color: "primary",
@@ -47,6 +47,14 @@ const HomeScreen: React.FC = () => {
     },
     {
       id: "2",
+      title: "Consultar Facturas",
+      description: "Consulta todas las facturas",
+      icon: documentTextOutline,
+      color: "secondary",
+      route: "/view-facturas-admin",
+    },
+    {
+      id: "3",
       title: "Tributos",
       description: "Tipos de tributos y tasas",
       icon: cashOutline,
@@ -54,7 +62,7 @@ const HomeScreen: React.FC = () => {
       route: "/tipo-tributo",
     },
     {
-      id: "3",
+      id: "4",
       title: "Usuarios",
       description: "Gestión de permisos",
       icon: shieldCheckmarkOutline,

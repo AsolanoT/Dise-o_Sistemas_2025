@@ -274,11 +274,13 @@ const FacturaForm: React.FC = () => {
                 placeholder="Seleccione usuario"
                 disabled={loading}
               >
-                {users.map((user) => (
-                  <IonSelectOption key={user.id} value={user.id}>
-                    {user.nombre} ({user.email}) - Rol: {user.role}
-                  </IonSelectOption>
-                ))}
+                {users
+                  .filter((user) => user.role === "Contribuyente") // Filtra solo contribuyentes
+                  .map((user) => (
+                    <IonSelectOption key={user.id} value={user.id}>
+                      {user.nombre} ({user.email}) - Rol: {user.role}
+                    </IonSelectOption>
+                  ))}
               </IonSelect>
             </IonItem>
             {formik.errors.user?.id && (

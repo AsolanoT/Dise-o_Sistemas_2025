@@ -34,6 +34,7 @@ import { ViewUsers } from "./pages/Roles/admin/view-users/users";
 import { ViewFacturas } from "./pages/Roles/entidad/view-factura/ViewFacturas";
 import { ViewContribuyentes } from "./pages/Roles/entidad/view-contribuyentes/ViewContribuyentes";
 import { ViewFacturasContribuyente } from "./pages/Roles/contribuyente/view-facturaContribuyente/ViewFacturasContribuyente";
+import { ViewFacturasAdmin } from "./pages/Roles/admin/View-Facturas/ViewFacturas";
 
 setupIonicReact();
 
@@ -62,6 +63,12 @@ const App: React.FC = () => (
           </MainLayout>
         </Route>
 
+        <Route exact path="/view-facturas-admin">
+          <MainLayout pageName="visualizar Facturas">
+            <ViewFacturasAdmin />
+          </MainLayout>
+        </Route>
+
         <Route exact path="/tipo-tributo">
           <MainLayout pageName="Tipo de Tributo">
             <TipoTributoForm />
@@ -81,7 +88,6 @@ const App: React.FC = () => (
         </Route>
 
         {/* Manejo de rol por entidad publica */}
-        
 
         <Route exact path="/entidad_publica/home">
           <MainLayout pageName="Página Principal">

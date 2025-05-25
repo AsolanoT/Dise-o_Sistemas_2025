@@ -40,8 +40,6 @@ const EntidadPublicaHomeScreen: React.FC = () => {
   const history = useHistory();
 
   // Datos ficticios para ejemplo
-  const facturasPendientesTotal = 42;
-  const contribuyentesRegistrados = 156;
 
   const cards: CardData[] = [
     {
@@ -51,7 +49,6 @@ const EntidadPublicaHomeScreen: React.FC = () => {
       icon: documentTextOutline,
       color: "primary",
       route: "/view-facturas",
-      badgeCount: facturasPendientesTotal,
     },
     {
       id: "2",
@@ -60,9 +57,15 @@ const EntidadPublicaHomeScreen: React.FC = () => {
       icon: peopleOutline,
       color: "secondary",
       route: "/view-contribuyentes",
-      badgeCount: contribuyentesRegistrados,
     },
   ];
+
+  // Agrega estilos para margen y sombra a las tarjetas
+  const cardStyle: React.CSSProperties = {
+    margin: "16px 0",
+    boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
+    borderRadius: "12px",
+  };
 
   const navigateTo = (route: string) => {
     history.push(route);

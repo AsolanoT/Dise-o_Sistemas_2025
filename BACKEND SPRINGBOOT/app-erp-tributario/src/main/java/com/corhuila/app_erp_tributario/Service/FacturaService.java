@@ -1,5 +1,7 @@
 package com.corhuila.app_erp_tributario.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,5 +40,10 @@ public class FacturaService extends ABaseService<Factura> implements IFacturaSer
         entity.setValorEstimado(valorEstimado);
 
         return repository.save(entity);
+    }
+
+    @Override
+    public List<Factura> findByUserId(Long userId) {
+        return repository.findByUserId(userId);
     }
 }
