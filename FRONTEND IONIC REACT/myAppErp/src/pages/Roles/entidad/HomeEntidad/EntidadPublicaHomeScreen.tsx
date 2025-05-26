@@ -58,6 +58,15 @@ const EntidadPublicaHomeScreen: React.FC = () => {
       color: "secondary",
       route: "/view-contribuyentes",
     },
+
+    {
+      id: "3",
+      title: "Estado de Factura",
+      description: "Editar estado de Facturas",
+      icon: peopleOutline,
+      color: "secondary",
+      route: "/edit-factura",
+    },
   ];
 
   // Agrega estilos para margen y sombra a las tarjetas

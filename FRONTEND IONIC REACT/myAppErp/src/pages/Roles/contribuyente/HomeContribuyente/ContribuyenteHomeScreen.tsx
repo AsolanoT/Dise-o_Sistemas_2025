@@ -53,14 +53,6 @@ const ContribuyenteHomeScreen: React.FC = () => {
       route: "/factura-contribuyentes",
       badgeCount: facturasPendientes,
     },
-    {
-      id: "2",
-      title: "Pagar Facturas",
-      description: "Realiza pagos de tus obligaciones",
-      icon: cashOutline,
-      color: "success",
-      route: "/contribuyente/pagos",
-    },
     
   ];
 
