@@ -65,6 +65,7 @@ interface FacturaFormValues {
 
 const FacturaForm: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+
   const history = useHistory();
   const [present] = useIonToast();
   const [users, setUsers] = useState<User[]>([]);
@@ -277,7 +278,7 @@ const FacturaForm: React.FC = () => {
                 {users
                   .filter((user) => user.role === "Contribuyente") // Filtra solo contribuyentes
                   .map((user) => (
-                    <IonSelectOption key={user.id} value={user.id}>
+                    <IonSelectOption key={user.id} value={user.id.toString()}>
                       {user.nombre} ({user.email}) - Rol: {user.role}
                     </IonSelectOption>
                   ))}

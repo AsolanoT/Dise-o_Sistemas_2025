@@ -36,7 +36,7 @@ import { ViewContribuyentes } from "./pages/Roles/entidad/view-contribuyentes/Vi
 import { ViewFacturasContribuyente } from "./pages/Roles/contribuyente/view-facturaContribuyente/ViewFacturasContribuyente";
 import { ViewFacturasAdmin } from "./pages/Roles/admin/View-Facturas/ViewFacturas";
 import { ViewTiposTributo } from "./pages/Roles/admin/View-Tributos/ViewTiposTributo";
-import { EditEstadoFacturas } from "./pages/Roles/entidad/Edit-EstadoFactura/EditEstadoFacturas";
+import { FacturasPage } from "./pages/Roles/entidad/Edit-EstadoFactura/EditEstadoFacturas";
 
 setupIonicReact();
 
@@ -114,18 +114,18 @@ const App: React.FC = () => (
           </MainLayout>
         </Route>
 
-        <Route exact path="/edit-factura">
-          <MainLayout pageName="Editar factura">
-            <EditEstadoFacturas />
+        <Route exact path="/view-facturas">
+          <MainLayout pageName="Consulta Factura">
+            <FacturasPage />
           </MainLayout>
         </Route>
 
-        <Route exact path="/factura/edit/:id">
+        <Route exact path="/view-facturas/editar/:id">
           <MainLayout pageName="editar factura">
             <FacturaForm />
           </MainLayout>
         </Route>
-        
+
         {/* Manejo de rol por Contributente */}
 
         <Route exact path="/contribuyente/home">
