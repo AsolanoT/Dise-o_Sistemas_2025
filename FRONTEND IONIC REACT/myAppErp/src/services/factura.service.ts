@@ -45,9 +45,17 @@ export const createFactura = async (facturaData: Omit<Factura, 'id'>): Promise<F
 
 export const updateFactura = async (id: number, facturaData: Partial<Factura>): Promise<Factura> => {
   try {
+    // Prepara el payload con el formato que espera el backend
     const payload = {
       ...facturaData,
-      status: true
+      status: true,
+      valorEstimado: facturaData.valorEstimado || 0, // Asegura valorEstimado
+      // Formatea fechas correctamente
+      fechaEmision: facturaData.fechaEmision + 'T00:00:00', // Añade hora si backend lo requiere
+      fechaVencimiento: facturaData.fechaVencimiento + 'T00:00:00',
+      // Asegura que las relaciones sean objetos completos
+      user: { id: facturaData.user?.id },
+      tipoTributo: { id: facturaData.tipoTributo?.id }
     };
     
     const response = await api.put<Factura>(`/factura/${id}`, payload);
@@ -57,6 +65,7 @@ export const updateFactura = async (id: number, facturaData: Partial<Factura>): 
     throw error;
   }
 };
+
 
 export const deleteFactura = async (id: number): Promise<void> => {
   try {

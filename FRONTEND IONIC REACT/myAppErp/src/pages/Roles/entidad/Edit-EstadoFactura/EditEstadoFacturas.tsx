@@ -1,397 +1,297 @@
 import {
-  IonPage,
   IonContent,
   IonHeader,
-  IonToolbar,
+  IonPage,
   IonTitle,
-  IonButtons,
-  IonButton,
-  IonIcon,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonBadge,
-  IonText,
-  useIonToast,
-  IonLoading,
+  IonToolbar,
   IonSearchbar,
+  IonList,
   IonRefresher,
   IonRefresherContent,
-  IonChip,
-  IonAvatar,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonCardSubtitle,
-  IonSelect,
-  IonSelectOption,
-  IonAlert
+  useIonToast,
+  IonButton,
+  IonIcon,
+  useIonAlert,
+  IonLoading,
+  IonSegment,
+  IonSegmentButton,
+  IonLabel,
+  IonText,
+  IonBadge,
+  IonItem,
 } from "@ionic/react";
 import {
-  documentText,
-  calendar,
-  cash,
-  arrowBack,
-  refresh,
-  save
+  addOutline,
+  calendarOutline,
+  documentTextOutline,
+  cashOutline,
 } from "ionicons/icons";
-import { useEffect, useState } from "react";
+import { RefresherEventDetail } from "@ionic/core";
+import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import "./EditEstadoFacturas.css";
-import { Factura, fetchFacturas, updateFactura } from "../../../../services/factura.service";
+import CustomHeader from "../../../../components/CustomHeader/CustomHeader";
+import {
+  Factura,
+  fetchFacturas,
+  deleteFactura,
+} from "../../../../services/factura.service";
 
-export function EditEstadoFacturas() {
+export const FacturasPage: React.FC = () => {
   const [facturas, setFacturas] = useState<Factura[]>([]);
   const [filteredFacturas, setFilteredFacturas] = useState<Factura[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [present] = useIonToast();
-  const [showAlert, setShowAlert] = useState(false);
-  const [facturaToUpdate, setFacturaToUpdate] = useState<Factura | null>(null);
-  const [selectedEstado, setSelectedEstado] = useState("");
+  const [presentAlert] = useIonAlert();
   const history = useHistory();
 
-  // Estados posibles para las facturas
-  const estadosPermitidos = [
-    { value: "pendiente", label: "Pendiente" },
-    { value: "pagada", label: "Pagada" },
-    { value: "vencida", label: "Vencida" },
-  ];
+  const loadFacturas = async () => {
+    try {
+      setLoading(true);
+      const data = await fetchFacturas();
+      setFacturas(data);
+      applyFilters(data, searchTerm, statusFilter);
+    } catch (error) {
+      console.error("Error loading invoices:", error);
+      present({
+        message: "Error al cargar las facturas",
+        duration: 2000,
+        position: "top",
+        color: "danger",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // Cargar facturas al montar el componente
+  const applyFilters = (data: Factura[], term: string, status: string) => {
+    let filtered = data;
+
+    // Filtrar por término de búsqueda
+    if (term.trim() !== "") {
+      filtered = filtered.filter(
+        (factura) =>
+          factura.id?.toString().includes(term) ||
+          factura.concepto?.toLowerCase().includes(term.toLowerCase()) ||
+          factura.periodo?.toLowerCase().includes(term.toLowerCase()) ||
+          factura.user?.id.toString().includes(term) ||
+          factura.estado?.toLowerCase().includes(term.toLowerCase())
+      );
+    }
+
+    // Filtrar por estado
+    if (status !== "all") {
+      filtered = filtered.filter(
+        (factura) => factura.estado.toLowerCase() === status.toLowerCase()
+      );
+    }
+
+    setFilteredFacturas(filtered);
+  };
+
   useEffect(() => {
     loadFacturas();
   }, []);
 
-  const loadFacturas = async () => {
-    try {
-      setIsLoading(true);
-      const facturasData = await fetchFacturas();
-      
-      // Validación exhaustiva de facturas
-      const validFacturas = facturasData
-        .filter(factura => factura !== null && factura !== undefined)
-        .filter(factura => factura.id !== null && factura.id !== undefined)
-        .filter(factura => factura.status !== false);
+  useEffect(() => {
+    applyFilters(facturas, searchTerm, statusFilter);
+  }, [searchTerm, statusFilter, facturas]);
 
-      setFacturas(validFacturas);
-      setFilteredFacturas(validFacturas);
-    } catch (error: any) {
+  const handleRefresh = (event: CustomEvent<RefresherEventDetail>) => {
+    loadFacturas().then(() => {
+      event.detail.complete();
       present({
-        message: error.message || "Error al cargar facturas",
-        duration: 3000,
+        message: "Facturas actualizadas",
+        duration: 1500,
         position: "top",
-        color: "danger",
       });
-    } finally {
-      setIsLoading(false);
-    }
+    });
   };
 
-  // Función para manejar el refresco
-  const handleRefresh = async (event: CustomEvent) => {
-    await loadFacturas();
-    event.detail.complete();
-  };
-
-  // Función para buscar facturas con validación
-  const handleSearch = (event: CustomEvent) => {
-    const query = event.detail.value?.toLowerCase() || "";
-    setFilteredFacturas(
-      facturas.filter(factura => {
-        if (!factura) return false;
-        return (
-          (factura.concepto?.toLowerCase() || '').includes(query) ||
-          (factura.periodo?.toLowerCase() || '').includes(query) ||
-          (factura.estado?.toLowerCase() || '').includes(query)
-        );
-      })
-    );
-  };
-
-  // Función para formatear el estado con colores
-  const formatEstado = (estado?: string) => {
-    if (!estado) return <IonBadge color="medium">Sin estado</IonBadge>;
-    
-    const estados: Record<string, { color: string; text: string }> = {
-      pendiente: { color: "warning", text: "Pendiente" },
-      pagada: { color: "success", text: "Pagada" },
-      vencida: { color: "danger", text: "Vencida" },
-      anulada: { color: "medium", text: "Anulada" },
-    };
-
-    const estadoInfo = estados[estado.toLowerCase()] || {
-      color: "primary",
-      text: estado,
-    };
-    return <IonBadge color={estadoInfo.color}>{estadoInfo.text}</IonBadge>;
-  };
-
-  // Función para formatear fecha con validación
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return "Fecha no disponible";
-    try {
-      const options: Intl.DateTimeFormatOptions = {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      };
-      return new Date(dateString).toLocaleDateString("es-ES", options);
-    } catch {
-      return dateString;
-    }
-  };
-
-  // Función para formatear moneda con validación
-  const formatCurrency = (value?: number) => {
-    if (value === undefined || value === null) return "$0";
-    return new Intl.NumberFormat("es-CO", {
-      style: "currency",
-      currency: "COP",
-      minimumFractionDigits: 0,
-    }).format(value);
-  };
-
-  // Función para preparar la actualización con validación
-  const handleUpdateEstado = (factura: Factura | null) => {
-    if (!factura || factura.id === null || factura.id === undefined) {
+  const handleEdit = (id: number) => {
+    if (!id) {
       present({
-        message: "Factura no válida para actualizar",
-        duration: 3000,
+        message: "ID de factura no válido",
+        duration: 2000,
         position: "top",
         color: "danger",
       });
       return;
     }
-    setFacturaToUpdate(factura);
-    setSelectedEstado(factura.estado || "pendiente");
-    setShowAlert(true);
+    history.push(`/view-facturas/editar/${id}`);
   };
 
-  // Función para confirmar y guardar el cambio de estado
-  const confirmUpdateEstado = async () => {
-    if (!facturaToUpdate || facturaToUpdate.id === undefined || facturaToUpdate.id === null || !selectedEstado) {
-      present({
-        message: "Datos incompletos para actualizar",
-        duration: 3000,
-        position: "top",
-        color: "danger",
-      });
-      return;
-    }
+  const handleDelete = (id: number) => {
+    presentAlert({
+      header: "Confirmar eliminación",
+      message: "¿Estás seguro de que deseas eliminar esta factura?",
+      buttons: [
+        { text: "Cancelar", role: "cancel" },
+        {
+          text: "Eliminar",
+          handler: async () => {
+            try {
+              await deleteFactura(id);
+              await loadFacturas();
+              present({
+                message: "Factura eliminada correctamente",
+                duration: 2000,
+                position: "top",
+                color: "success",
+              });
+            } catch (error) {
+              present({
+                message: "Error al eliminar la factura",
+                duration: 2000,
+                position: "top",
+                color: "danger",
+              });
+            }
+          },
+        },
+      ],
+    });
+  };
 
-    try {
-      setIsLoading(true);
-      
-      // Asegurar que el ID es un número válido
-      const facturaId = Number(facturaToUpdate.id);
-      if (isNaN(facturaId)) {
-        throw new Error("ID de factura inválido");
-      }
-
-      // Crear objeto de actualización con tipos explícitos
-      const updateData: Partial<Factura> = {
-        ...facturaToUpdate,
-        estado: selectedEstado
-      };
-
-      const updatedFactura = await updateFactura(facturaId, updateData);
-
-      // Actualización segura del estado
-      setFacturas(prev => prev.map(f => 
-        f && f.id === updatedFactura.id ? updatedFactura : f
-      ));
-      setFilteredFacturas(prev => prev.map(f => 
-        f && f.id === updatedFactura.id ? updatedFactura : f
-      ));
-
-      present({
-        message: "Estado actualizado correctamente",
-        duration: 3000,
-        position: "top",
-        color: "success",
-      });
-    } catch (error: any) {
-      present({
-        message: error.message || "Error al actualizar",
-        duration: 3000,
-        position: "top",
-        color: "danger",
-      });
-    } finally {
-      setIsLoading(false);
-      setShowAlert(false);
-      setFacturaToUpdate(null);
-      setSelectedEstado("");
+  const getEstadoColor = (estado: string) => {
+    switch (estado?.toLowerCase()) {
+      case "pagado":
+        return "success";
+      case "pendiente":
+        return "warning";
+      case "vencido":
+        return "danger";
+      default:
+        return "medium";
     }
   };
 
-  // Función para renderizar las facturas de manera segura
-  const renderFacturas = () => {
-    if (!filteredFacturas || filteredFacturas.length === 0) {
-      return (
-        <div className="ion-text-center ion-padding">
-          <IonText color="medium">No se encontraron facturas</IonText>
-        </div>
-      );
-    }
-
-    return (
-      <IonList className="ion-margin">
-        {filteredFacturas
-          .filter(factura => factura && factura.id !== null && factura.id !== undefined)
-          .map((factura) => (
-            <IonCard key={`factura-${factura.id}`} className="factura-card">
-              <IonCardHeader>
-                <IonGrid>
-                  <IonRow className="ion-align-items-center">
-                    <IonCol size="auto">
-                      <IonAvatar className="factura-avatar">
-                        <IonIcon icon={documentText} size="large" color="primary" />
-                      </IonAvatar>
-                    </IonCol>
-                    <IonCol>
-                      <IonCardTitle>{factura.concepto || "Sin concepto"}</IonCardTitle>
-                      <IonCardSubtitle>
-                        <IonText color="medium">
-                          Periodo: {factura.periodo || "Sin periodo"} •{" "}
-                          {formatEstado(factura.estado)}
-                        </IonText>
-                      </IonCardSubtitle>
-                    </IonCol>
-                  </IonRow>
-                </IonGrid>
-              </IonCardHeader>
-
-              <IonCardContent>
-                <IonGrid>
-                  <IonRow>
-                    <IonCol size="6">
-                      <IonChip color="light">
-                        <IonIcon icon={calendar} color="primary" />
-                        <IonLabel>
-                          Emisión: {formatDate(factura.fechaEmision)}
-                        </IonLabel>
-                      </IonChip>
-                    </IonCol>
-                    <IonCol size="6">
-                      <IonChip color="light">
-                        <IonIcon icon={calendar} color="primary" />
-                        <IonLabel>
-                          Vencimiento: {formatDate(factura.fechaVencimiento)}
-                        </IonLabel>
-                      </IonChip>
-                    </IonCol>
-                  </IonRow>
-
-                  <IonRow>
-                    <IonCol size="6">
-                      <IonChip color="light">
-                        <IonIcon icon={cash} color="primary" />
-                        <IonLabel>
-                          Base: {formatCurrency(factura.baseCalculo)}
-                        </IonLabel>
-                      </IonChip>
-                    </IonCol>
-                    <IonCol size="6">
-                      <IonChip color="light">
-                        <IonIcon icon={cash} color="primary" />
-                        <IonLabel>
-                          Total: {formatCurrency(factura.valorEstimado)}
-                        </IonLabel>
-                      </IonChip>
-                    </IonCol>
-                  </IonRow>
-
-                  <IonRow>
-                    <IonCol>
-                      <IonButton
-                        expand="block"
-                        color="primary"
-                        onClick={() => handleUpdateEstado(factura)}
-                      >
-                        <IonIcon icon={save} slot="start" />
-                        Cambiar Estado
-                      </IonButton>
-                    </IonCol>
-                  </IonRow>
-                </IonGrid>
-              </IonCardContent>
-            </IonCard>
-          ))}
-      </IonList>
-    );
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    };
+    return new Date(dateString).toLocaleDateString("es-ES", options);
   };
+
+  // Estados únicos para los filtros
+  const estadosUnicos = Array.from(new Set(facturas.map((f) => f.estado)));
 
   return (
     <IonPage>
+      <CustomHeader
+        pageName="Todas las Facturas"
+        showMenuButton={false}
+        showLogoutButton={true}
+      />
       <IonHeader>
-        <IonToolbar color="primary">
-          <IonButtons slot="start">
-            <IonButton onClick={() => history.goBack()}>
-              <IonIcon icon={arrowBack} />
-            </IonButton>
-          </IonButtons>
-          <IonTitle>Editar Estados de Facturas</IonTitle>
-          <IonButtons slot="end">
-            <IonButton onClick={loadFacturas}>
-              <IonIcon icon={refresh} />
-            </IonButton>
-          </IonButtons>
+        <IonToolbar>
+          <IonSearchbar
+            value={searchTerm}
+            onIonChange={(e) => setSearchTerm(e.detail.value || "")}
+            placeholder="Buscar por ID, concepto, período o usuario"
+            debounce={300}
+          />
+        </IonToolbar>
+        <IonToolbar>
+          <IonSegment
+            value={statusFilter}
+            onIonChange={(e) => setStatusFilter(e.detail.value as string)}
+            scrollable
+          >
+            <IonSegmentButton value="all">
+              <IonLabel>Todas</IonLabel>
+            </IonSegmentButton>
+            {estadosUnicos.map((estado) => (
+              <IonSegmentButton key={estado} value={estado}>
+                <IonLabel>{estado}</IonLabel>
+              </IonSegmentButton>
+            ))}
+          </IonSegment>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent>
+      <IonContent fullscreen>
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
 
-        <IonSearchbar
-          placeholder="Buscar facturas..."
-          debounce={500}
-          onIonChange={handleSearch}
-        />
+        <IonLoading isOpen={loading} message="Cargando facturas..." />
 
-        {isLoading ? (
-          <IonLoading isOpen={true} message="Cargando facturas..." />
+        {!loading && filteredFacturas.length === 0 ? (
+          <div className="empty-state">
+            <p>
+              {searchTerm || statusFilter !== "all"
+                ? "No se encontraron facturas que coincidan con los filtros"
+                : "No hay facturas registradas"}
+            </p>
+            <IonButton
+              fill="solid"
+              color="primary"
+              onClick={() => history.push("/facturas/crear")}
+            >
+              Crear nueva factura
+            </IonButton>
+          </div>
         ) : (
-          renderFacturas()
+          <IonList className="facturas-list">
+            {filteredFacturas.map((factura) => (
+              <IonItem
+                key={factura.id}
+                className="factura-item"
+                detail
+                onClick={() => handleEdit(factura.id!)}
+              >
+                <div className="factura-content">
+                  <div className="factura-header">
+                    <IonLabel>
+                      <h2>
+                        <IonIcon icon={documentTextOutline} color="primary" />
+                        Factura #{factura.id}
+                      </h2>
+                      <p>
+                        <IonIcon icon={cashOutline} />
+                        Base: ${factura.baseCalculo.toFixed(2)}
+                        {factura.valorEstimado &&
+                          ` | Estimado: $${factura.valorEstimado.toFixed(2)}`}
+                      </p>
+                    </IonLabel>
+                    <IonBadge color={getEstadoColor(factura.estado)}>
+                      {factura.estado}
+                    </IonBadge>
+                  </div>
+
+                  <div className="factura-details">
+                    <div className="factura-detail">
+                      <IonIcon icon={calendarOutline} />
+                      <IonText>
+                        <p>Emisión: {formatDate(factura.fechaEmision)}</p>
+                        <p>
+                          Vencimiento: {formatDate(factura.fechaVencimiento)}
+                        </p>
+                      </IonText>
+                    </div>
+                    <div className="factura-meta">
+                      <p>
+                        <strong>Usuario:</strong> #{factura.user.id}
+                      </p>
+                      <p>
+                        <strong>Período:</strong> {factura.periodo}
+                      </p>
+                      <p>
+                        <strong>Concepto:</strong> {factura.concepto}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </IonItem>
+            ))}
+          </IonList>
         )}
       </IonContent>
-
-      <IonAlert
-        isOpen={showAlert}
-        onDidDismiss={() => setShowAlert(false)}
-        header={`Cambiar estado de factura`}
-        subHeader={`Factura: ${facturaToUpdate?.concepto || 'Sin concepto'}`}
-        message="Seleccione el nuevo estado para esta factura:"
-        inputs={estadosPermitidos.map(estado => ({
-          type: 'radio',
-          label: estado.label,
-          value: estado.value,
-          checked: selectedEstado === estado.value
-        }))}
-        buttons={[
-          {
-            text: 'Cancelar',
-            role: 'cancel',
-            handler: () => {
-              setShowAlert(false);
-              setFacturaToUpdate(null);
-            }
-          },
-          {
-            text: 'Guardar',
-            handler: (value) => {
-              setSelectedEstado(value);
-              confirmUpdateEstado();
-            }
-          }
-        ]}
-      />
     </IonPage>
   );
-}
+};

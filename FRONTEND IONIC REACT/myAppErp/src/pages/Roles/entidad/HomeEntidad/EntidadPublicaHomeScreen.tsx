@@ -65,7 +65,7 @@ const EntidadPublicaHomeScreen: React.FC = () => {
       description: "Editar estado de Facturas",
       icon: peopleOutline,
       color: "secondary",
-      route: "/edit-factura",
+      route: "/view-facturas",
     },
   ];
 
